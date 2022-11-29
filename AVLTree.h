@@ -22,7 +22,6 @@ private:
     BinNode *m_minValueNode; // in order to find the minimum value in tree in O(1)
     BinNode *m_maxValueNode; // in order to find the maximum value in tree in O(1)
     int m_size;
-    Comparison comparisonFunction;
 
      //Node Functions
      BinNode *initNode(const T &data);
@@ -352,7 +351,7 @@ typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::insertNode(AVL
         newNode->m_father = father;
         return newNode;
     }
-    if(comparisonFunction.lessThan(newNode->m_data, currentNode->m_data)){
+    if(Comparison::lessThan(newNode->m_data, currentNode->m_data)){
         currentNode->m_left = insertNode(newNode, currentNode->m_left, currentNode);
     } else {
         currentNode->m_right = insertNode(newNode, currentNode->m_right, currentNode);
@@ -374,10 +373,10 @@ typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::findNode(AVLTr
                                                                            const S &data) {
     if(node == nullptr)
         return nullptr;
-    if (comparisonFunction.equalTo(node->m_data, data)) {
+    if (Comparison::equalTo(node->m_data, data)) {
         return node;
     } else {
-        if(comparisonFunction.lessThan(node->m_data, data)){
+        if(Comparison::lessThan(node->m_data, data)){
             return findNode(node->m_right, data);
         } else {
             return findNode(node->m_left, data);
@@ -416,7 +415,7 @@ typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::removeNode(AVL
         }
     }
     else{
-        if (comparisonFunction.lessThan(currentNode->m_data,nodeToDelete->m_data)) {
+        if (Comparison::lessThan(currentNode->m_data,nodeToDelete->m_data)) {
             nodeToDelete->m_left = removeNode(currentNode, nodeToDelete->m_left);
         } else {
             nodeToDelete->m_right = removeNode(currentNode, nodeToDelete->m_right);
