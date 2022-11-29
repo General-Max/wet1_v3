@@ -66,7 +66,7 @@ void Team::insertPlayer(shared_ptr<Player> player)
     m_totalCards+=player->getCards();
     m_totalGoals+=player->getGoals();
     m_totalPlayers++;
-    //needs to be finishid!!!!
+    //needs to be finishid !!!!
 }
 
 void Team::updatePoints(int points) {
