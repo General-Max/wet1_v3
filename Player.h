@@ -49,7 +49,7 @@ private:
     int m_goals;
     int m_cards;
     bool m_goalKeeper;
-    //Team* m_team_ptr;
+    shared_ptr<Team> m_team_ptr;
     //ListNode<Player*>* m_dequePtr;
 };
 

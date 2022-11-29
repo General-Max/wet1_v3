@@ -56,7 +56,7 @@ bool Team::isEmptyTeam() const {
     return m_totalPlayers == 0;
 }
 
-void Team::insertPlayer(Player* player)
+void Team::insertPlayer(shared_ptr<Player> player)
 {
     if(player->getGoalKeeper()){
         this->m_goalkeepers++;
@@ -78,7 +78,7 @@ int Team::getScore() const
     return this->m_points+this->m_totalCards-m_totalCards;
 }
 
-void Team::removePLayer(Player *player) {
+void Team::removePLayer(shared_ptr<Player>player) {
     if(player->getGoalKeeper()){
         this->m_goalkeepers--;
     }
@@ -93,25 +93,25 @@ int Team::getGoalkeepers() const {
     return m_goalkeepers;
 }
 
-AVLTree<Player*, SortByScore> Team::getScoreTree() const
+AVLTree<shared_ptr<Player>, SortByScore> Team::getScoreTree() const
 {
     return this->m_teamPlayersByScore;
 }
 
-AVLTree<Player*, SortById> Team::getIdTree() const
+AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
 {
     return this->m_teamPlayersByID;
 }
 
 
-void Team::merge(Team* merged)
+void Team::merge(shared_ptr<Team> merged)
 {
     fillNewTree(merged, this->m_teamPlayersByID, merged->m_teamPlayersByID, true);
     fillNewTree(merged, this->m_teamPlayersByScore, merged->m_teamPlayersByScore, false);
     this->updatePoints(merged->getPoints());
 }
 
-void Team::unite(Team* team1, Team *team2, int newTeamId) {
+void Team::unite(shared_ptr<Team> team1, shared_ptr<Team>team2, int newTeamId) {
     Team* newTeam = new Team(newTeamId, team1->getPoints()+team2->getPoints());
 
     newTeam->merge(team1);
@@ -119,7 +119,7 @@ void Team::unite(Team* team1, Team *team2, int newTeamId) {
 }
 
 template<class T>
-void Team::fillNewTree(Team *merged, AVLTree<Player *, T>& targetTree, AVLTree<Player *, T>& mergedTree, bool doInsert) {
+void Team::fillNewTree(shared_ptr<Team>merged, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree, bool doInsert) {
     int sizeTarget = targetTree.getSize();
     int sizeMerged = mergedTree.getSize();
     int size = sizeTarget+sizeMerged;
@@ -145,7 +145,7 @@ void Team::fillNewTree(Team *merged, AVLTree<Player *, T>& targetTree, AVLTree<P
 }
 
 template<class T>
-Player ** Team::mergeSortedArrays(AVLTree<Player *, T>& targetTree, AVLTree<Player *, T>& mergedTree, int sizeTarget,
+shared_ptr<shared_ptr<Player>> Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree, int sizeTarget,
                                   int sizeMerged) {
     Player** targetArray = targetTree.inOrderArray();
     Player** mergedArray = mergedTree.inOrderArray();
