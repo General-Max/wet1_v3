@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.21)
+project(data_s_v3)
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_executable(data_s_v3 main.cpp
+        AVLTree.h
+        Player.h
+        Player.cpp
+        SortById.h
+        SortById.cpp
+        SortByScore.h
+        SortByScore.cpp
+        SortTeamById.h
+        SortTeamById.cpp
+        Team.h
+        Team.cpp)

@@ -1,0 +1,3 @@
+C:/technion/data_structure/wet1_v3/cmake-build-debug/CMakeFiles/data_s_v3.dir
+C:/technion/data_structure/wet1_v3/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/technion/data_structure/wet1_v3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
