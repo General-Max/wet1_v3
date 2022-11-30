@@ -288,9 +288,14 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 
     shared_ptr<Team> team1 = m_teams.find(teamId1)->m_data;
     shared_ptr<Team> team2 = m_teams.find(teamId2)->m_data;
-    shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
-
-    if(team1==nullptr || team2==nullptr || ((newTeam!= nullptr && newTeamId!=teamId1) && (newTeam!= nullptr && newTeamId!=teamId2))){
+    if(m_teams.find(newTeamId)!=nullptr){
+        shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
+    }
+    else{
+        shared_ptr<Team> newTeam = nullptr;
+    }
+    if(team1==nullptr || team2==nullptr || ((m_teams.find(newTeamId)!=nullptr && newTeamId!=teamId1) && (
+            m_teams.find(newTeamId)!=nullptr && newTeamId!=teamId2))){
         return StatusType::FAILURE;
     }
 

@@ -105,14 +105,16 @@ AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
 
 
 template<class T>
-shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
-                        int sizeTarget, int sizeMerged) {
-    shared_ptr<Player>* targetArray = targetTree.inOrderArray();
-    shared_ptr<Player>* mergedArray = mergedTree.inOrderArray();
+void Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
+                        int sizeTarget, int sizeMerged, shared_ptr<Player>* newTeam) {
+    shared_ptr<Player>* targetArray = new shared_ptr<Player>[sizeTarget];
+    shared_ptr<Player>* mergedArray = new shared_ptr<Player>[sizeMerged];
+//    shared_ptr<Player>* targetArray = targetTree.inOrderArray();
+//    shared_ptr<Player>* mergedArray = mergedTree.inOrderArray();
+    targetTree.auxInOrder(targetArray, targetTree.getRoot(), sizeTarget, 0);
+    mergedTree.auxInOrder(mergedArray, mergedTree.getRoot(), sizeMerged, 0);
+    //int size = sizeTarget+sizeMerged;
 
-    int size = sizeTarget+sizeMerged;
-
-    shared_ptr<Player>* newTeam = new shared_ptr<Player>[size];
     int index1=0;
     int index2=0;
     int i=0;
@@ -141,7 +143,18 @@ shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &tar
         index2++;
         i++;
     }
-    return newTeam;
+
+    for(int i = 0; i<sizeTarget; i++){
+        *(targetArray+i)= nullptr;
+    }
+
+    for(int i = 0; i<sizeMerged; i++){
+        *(mergedArray+i)= nullptr;
+    }
+
+    delete[] targetArray;
+    delete[] mergedArray;
+//    return newTeam;
 }
 
 /*
@@ -219,7 +232,8 @@ void Team::fillNewTree(shared_ptr<Team> toMerge, AVLTree<shared_ptr<Player>, T>&
     int sizeMerged = mergedTree.getSize();
     int size = sizeTarget+sizeMerged;
 
-    shared_ptr<Player>* newArray = mergeSortedArrays(targetTree, mergedTree, sizeTarget, sizeMerged);
+    shared_ptr<Player>* newArray = new shared_ptr<Player>[size];
+    mergeSortedArrays(targetTree, mergedTree, sizeTarget, sizeMerged, newArray);
 
     targetTree.emptyTree();
     mergedTree.emptyTree();
@@ -235,7 +249,7 @@ void Team::fillNewTree(shared_ptr<Team> toMerge, AVLTree<shared_ptr<Player>, T>&
 
         targetTree.insert(newArray[i]);
     }
-    delete newArray;
+    delete[] newArray;
 }
 
 

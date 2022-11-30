@@ -44,8 +44,11 @@ public:
     void fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player> , T>& targetTree,  AVLTree<shared_ptr<Player> , T>& mergedTree);
 
     template<class T>
-    static shared_ptr<Player>* mergeSortedArrays(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
-                                      int sizeTarget, int sizeMerged);
+    static void mergeSortedArrays(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
+                                      int sizeTarget, int sizeMerged, shared_ptr<Player>* newTeam);
+
+    //shared_ptr<Player>* Team::mergeSortedArrays(shared_ptr<Player>* arr1, int size1,shared_ptr<Player>* arr2, int size2);
+
 
 
 private:
