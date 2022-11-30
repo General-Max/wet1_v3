@@ -101,12 +101,15 @@ StatusType world_cup_t::remove_player(int playerId)
     }
     try{
         shared_ptr<Player> playerToRemove = m_playersById.find(playerId)->m_data;
-        shared_ptr<Team> playerTeam = std::shared_ptr<Team>(playerToRemove->getTeamPtr());
+      //  shared_ptr<Team> playerTeam = std::shared_ptr<Team>(playerToRemove->getTeamPtr());
+        Team *playerTeam = playerToRemove->getTeamPtr();
         m_playersListByScore.removeNode(playerToRemove->getDequePtr());
         m_playersById.remove(playerId);
         m_playersByScore.remove(playerToRemove);
         playerTeam->removePLayer(playerToRemove);
-        removeIfNodValidTeam(playerTeam);
+        if(m_validTeams.find(playerToRemove->getTeamId()) != nullptr){
+            removeIfNodValidTeam(m_validTeams.find(playerToRemove->getTeamId())->m_data);
+        }
         std::cout << "AFTER REMOVE players by score: " <<std::endl;
          m_playersByScore.printD(m_playersByScore.getRoot(), 10);
         m_playersListByScore.printList();
