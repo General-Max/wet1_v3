@@ -1,10 +1,10 @@
 #include "SortByScore.h"
 
-bool SortByScore::equalTo(Player *player1, Player *player2) {
+bool SortByScore::equalTo(shared_ptr<Player> player1, shared_ptr<Player>player2) {
     return player1->getPlayerId()==player2->getPlayerId();
 }
 
-bool SortByScore::lessThan(Player *player1, Player *player2) {
+bool SortByScore::lessThan(shared_ptr<Player>player1, shared_ptr<Player>player2) {
     if(player1->getGoals() < player2->getGoals()){
         return true;
     }
@@ -27,11 +27,11 @@ bool SortByScore::lessThan(Player *player1, Player *player2) {
     return false;
 }
 
-bool SortByScore::equalTo(Player *player1, int otherGoals) {
+bool SortByScore::equalTo(shared_ptr<Player>player1, int otherGoals) {
     return player1->getGoals() == otherGoals;
 }
 
-bool SortByScore::lessThan(Player *player1, int otherGoals) {
+bool SortByScore::lessThan(shared_ptr<Player>player1, int otherGoals) {
     return player1->getGoals() < otherGoals;
 }
 

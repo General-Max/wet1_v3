@@ -1,13 +1,15 @@
 #include "Player.h"
-//#include "Team.h"
+#include "Team.h"
 
 Player::Player(int playerId, int teamId, int gamesPlayed, int goals, int cards, bool goalkeeper) : m_playerId(playerId),
-                                                                                                   m_teamId(teamId), m_gamesPlayed(gamesPlayed), m_goals(goals), m_cards(cards), m_goalKeeper(goalkeeper){}
+                                                                                                   m_teamId(teamId), m_gamesPlayed(gamesPlayed), m_goals(goals), m_cards(cards), m_goalKeeper(goalkeeper){
+    std::cout << "create player " <<playerId <<std::endl;
+}
 
-//Player::~Player()
-//{
-//    //delete this->m_dequePtr;
-//}
+Player::~Player(){
+    std::cout << "delete player " << this->m_playerId << std::endl;
+
+}
 
 int Player::getPlayerId() const {
     return this->m_playerId;
@@ -56,21 +58,20 @@ void Player::setGoalKeeper(bool isGoalKeeper) {
     this->m_goalKeeper = isGoalKeeper;
 }
 
-//ListNode<Player *>* Player::getDequePtr() {
-//    return m_dequePtr;
-//}
-//
-//void Player::setDequePtr(ListNode<Player*>* newDequePtr) {
-//    this->m_dequePtr = newDequePtr;
-//}
-//
-//void Player::setTeamPtr(Team *teamPtr) {
-//    m_team_ptr = teamPtr;
-//}
-//
-//Team *Player::getTeamPtr() {
-//    return m_team_ptr;
-//}
+TwoWayList<shared_ptr<Player>>::ListNode* Player::getDequePtr() {
+    return m_dequePtr;
+}
+
+void Player::setDequePtr(TwoWayList<shared_ptr<Player>>::ListNode* newDequePtr) {
+    this->m_dequePtr = newDequePtr;
+}
+
+void Player::setTeamPtr(Team*  teamPtr) {
+    m_team_ptr = teamPtr;
+}
+Team*  Player::getTeamPtr() {
+    return m_team_ptr;
+}
 
 
 

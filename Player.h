@@ -2,15 +2,16 @@
 #define EX1_Player_H
 
 #include <ostream>
+#include <memory>
 class Team;
-//#include "ListNode.h"
+#include "TwoWayList.h"
 using std::ostream;
-
+using std::shared_ptr;
 
 class Player{
 public:
      Player(int playerId, int teamId, int gamesPlayed, int goals, int cards, bool goalkeeper); // check for consts
-    ~Player() =default;
+    ~Player();
 
     int getPlayerId() const;
 
@@ -24,11 +25,11 @@ public:
 
     bool getGoalKeeper() const;
 
-  //  Team* getTeamPtr();
+    Team*  getTeamPtr();
 
-    //ListNode<Player*>* getDequePtr();
+    TwoWayList<shared_ptr<Player>>::ListNode* getDequePtr();
 
-  //  void setDequePtr(ListNode<Player*>* newDequePtr);
+    void setDequePtr(TwoWayList<shared_ptr<Player>>::ListNode* newDequePtr);
 
     friend ostream& operator<<(ostream& os, const Player& player);
 
@@ -41,7 +42,7 @@ public:
     //TODO: CHECK IF NEED
     void setGoalKeeper(bool isGoalKeeper);
 
-    //void setTeamPtr(Team* teamPtr);
+    void setTeamPtr(Team*  teamPtr);
 private:
     int m_playerId;
     int m_teamId;
@@ -49,8 +50,9 @@ private:
     int m_goals;
     int m_cards;
     bool m_goalKeeper;
-    shared_ptr<Team> m_team_ptr;
-    //ListNode<Player*>* m_dequePtr;
+    Team* m_team_ptr;
+    TwoWayList<shared_ptr<Player>>::ListNode* m_dequePtr;
+
 };
 
 #endif // EX1_Player_H

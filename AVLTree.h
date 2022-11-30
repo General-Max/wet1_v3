@@ -9,8 +9,7 @@
 
 template<class T, class Comparison>
 class AVLTree {
-private:
-    //Tree fields
+public:
     struct BinNode {
         BinNode *m_right;
         BinNode *m_left;
@@ -18,13 +17,53 @@ private:
         int m_height;
         T m_data;
     };
+    // Constructors, Destructor, Assignment
+    AVLTree();
+
+    // AVLTree(const AVLTree<T, Comparison> &tree);
+
+    AVLTree &operator=(const AVLTree<T, Comparison> &tree);
+
+    ~AVLTree();
+
+    // Interface Functions
+    void insert(T data);
+
+    template<class S>
+    BinNode * find(const S &data);
+
+    template<class S>
+    void remove(const S &data);
+
+    int getHeight() const;
+
+    int getSize() const;
+
+    BinNode* getRoot() const;
+
+    void emptyTree();
+
+    bool isEmpty() const;
+
+    void printH(BinNode *node, int space);
+
+    void printD(BinNode *node, int space);
+
+    T getMinValueInTree() const;
+
+    T getMaxValueInTree() const;
+
+    T* inOrderArray();
+
+private:
+    //Tree fields
     BinNode *m_root;
     BinNode *m_minValueNode; // in order to find the minimum value in tree in O(1)
     BinNode *m_maxValueNode; // in order to find the maximum value in tree in O(1)
     int m_size;
 
      //Node Functions
-     BinNode *initNode(const T &data);
+     BinNode *initNode(T data);
 
      BinNode *balanceTree(BinNode *node);
 
@@ -60,47 +99,6 @@ private:
     BinNode* findMax(BinNode* node) const;
 
     int auxInOrder(T* array, BinNode* node, int size, int position);
-
-    public:
-    // Constructors, Destructor, Assignment
-    AVLTree();
-
-    // AVLTree(const AVLTree<T, Comparison> &tree);
-
-    AVLTree &operator=(const AVLTree<T, Comparison> &tree);
-
-    ~AVLTree();
-
-    // Interface Functions
-    void insert(const T &data);
-
-    template<class S>
-    BinNode * find(const S &data);
-
-    template<class S>
-    void remove(const S &data);
-
-    int getHeight() const;
-
-    int getSize() const;
-
-    BinNode* getRoot() const;
-
-    void emptyTree();
-
-    bool isEmpty() const;
-
-    void printH(BinNode *node, int space);
-
-    void printD(BinNode *node, int space);
-
-    T getMinValueInTree() const;
-
-    T getMaxValueInTree() const;
-
-    T* inOrderArray();
-
-
 };
 
 template<class T,class Comparison>
@@ -161,7 +159,7 @@ AVLTree<T, Comparison>& AVLTree<T, Comparison>::operator=(const AVLTree<T, Compa
 
 
 template<class T, class Comparison>
-void AVLTree<T, Comparison>::insert(const T& data) {
+void AVLTree<T, Comparison>::insert(T data) {
     if (&data == nullptr) {
         return;
     }
@@ -238,7 +236,8 @@ void AVLTree<T, Comparison>::empty_aux(AVLTree<T, Comparison>::BinNode* node) {
     if(node->m_right){
         empty_aux(node->m_right);
     }
-    delete node->m_data;
+    //delete node->m_data;
+    std::cout << "delete node " << std::endl;
     delete node;
 }
 
@@ -303,7 +302,7 @@ typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::getRoot() cons
 }
 
 template<class T, class Comparison>
-typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::initNode(const T &data) {
+typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::initNode(T data) {
     BinNode* node = new BinNode();
     node->m_data=data;
     node->m_height =0;

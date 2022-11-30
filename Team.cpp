@@ -56,7 +56,7 @@ bool Team::isEmptyTeam() const {
     return m_totalPlayers == 0;
 }
 
-void Team::insertPlayer(shared_ptr<Player> player)
+void Team::insertPlayer(const shared_ptr<Player>& player)
 {
     if(player->getGoalKeeper()){
         this->m_goalkeepers++;
@@ -75,10 +75,10 @@ void Team::updatePoints(int points) {
 
 int Team::getScore() const
 {
-    return this->m_points+this->m_totalCards-m_totalCards;
+    return this->m_points+ (this->m_totalGoals - this->m_totalCards);
 }
 
-void Team::removePLayer(shared_ptr<Player>player) {
+void Team::removePLayer(shared_ptr<Player> player) {
     if(player->getGoalKeeper()){
         this->m_goalkeepers--;
     }
@@ -103,56 +103,15 @@ AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
     return this->m_teamPlayersByID;
 }
 
-
-void Team::merge(shared_ptr<Team> merged)
-{
-    fillNewTree(merged, this->m_teamPlayersByID, merged->m_teamPlayersByID, true);
-    fillNewTree(merged, this->m_teamPlayersByScore, merged->m_teamPlayersByScore, false);
-    this->updatePoints(merged->getPoints());
-}
-
-void Team::unite(shared_ptr<Team> team1, shared_ptr<Team>team2, int newTeamId) {
-    Team* newTeam = new Team(newTeamId, team1->getPoints()+team2->getPoints());
-
-    newTeam->merge(team1);
-    newTeam->merge(team2);
-}
-
 template<class T>
-void Team::fillNewTree(shared_ptr<Team>merged, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree, bool doInsert) {
-    int sizeTarget = targetTree.getSize();
-    int sizeMerged = mergedTree.getSize();
-    int size = sizeTarget+sizeMerged;
-
-    Player** newArray = mergeSortedArrays(targetTree, mergedTree, sizeTarget, sizeMerged);
-
-    targetTree.emptyTree();
-    mergedTree.emptyTree();
-
-
-    for(int i=0;i<size;i++){
-        if(doInsert){
-            if(newArray[i]->getGoalKeeper()){
-                this->m_goalkeepers++;
-            }
-            m_totalCards+=newArray[i]->getCards();
-            m_totalGoals+=newArray[i]->getGoals();
-            m_totalPlayers++;
-        }
-        targetTree.insert(newArray[i]);
-    }
-    delete newArray;
-}
-
-template<class T>
-shared_ptr<shared_ptr<Player>> Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree, int sizeTarget,
-                                  int sizeMerged) {
-    Player** targetArray = targetTree.inOrderArray();
-    Player** mergedArray = mergedTree.inOrderArray();
+shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
+                        int sizeTarget, int sizeMerged) {
+    shared_ptr<Player>* targetArray = targetTree.inOrderArray();
+    shared_ptr<Player>* mergedArray = mergedTree.inOrderArray();
 
     int size = sizeTarget+sizeMerged;
 
-    Player** newTeam = (Player**) malloc(sizeof(Player*)*(size));
+    shared_ptr<Player>* newTeam = (shared_ptr<Player>*) malloc(sizeof(shared_ptr<Player>)*(size));
     int index1=0;
     int index2=0;
     int i=0;
@@ -182,4 +141,49 @@ shared_ptr<shared_ptr<Player>> Team::mergeSortedArrays(AVLTree<shared_ptr<Player
         i++;
     }
     return newTeam;
+}
+
+
+void Team::merge(shared_ptr<Team> merged)
+{
+    fillNewTree(merged, this->m_teamPlayersByID, merged->m_teamPlayersByID, true);
+    fillNewTree(merged, this->m_teamPlayersByScore, merged->m_teamPlayersByScore, false);
+    this->updatePoints(merged->getPoints());
+}
+
+void Team::unite(shared_ptr<Team> team1, shared_ptr<Team> team2, int newTeamId) {
+    Team* newTeam = new Team(newTeamId, team1->getPoints()+team2->getPoints());
+
+    newTeam->merge(team1);
+    newTeam->merge(team2);
+}
+
+template<class T>
+void Team::fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree, bool doInsert) {
+    int sizeTarget = targetTree.getSize();
+    int sizeMerged = mergedTree.getSize();
+    int size = sizeTarget+sizeMerged;
+
+    shared_ptr<Player>* newArray = mergeSortedArrays(targetTree, mergedTree, sizeTarget, sizeMerged);
+
+    targetTree.emptyTree();
+    mergedTree.emptyTree();
+
+
+    for(int i=0;i<size;i++){
+        if(doInsert){
+            if(newArray[i]->getGoalKeeper()){
+                this->m_goalkeepers++;
+            }
+            m_totalCards+=newArray[i]->getCards();
+            m_totalGoals+=newArray[i]->getGoals();
+            m_totalPlayers++;
+        }
+        targetTree.insert(newArray[i]);
+    }
+    delete newArray;
+}
+
+Team::~Team() {
+    std::cout << "delete team " << this->m_teamId << std::endl;
 }

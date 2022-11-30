@@ -13,7 +13,7 @@ class Player;
 class Team{
 public:
     Team(int teamId, int points);
-    ~Team() = default;
+    ~Team();
 
     int getTeamId() const;
     int getPoints() const;
@@ -31,7 +31,7 @@ public:
     void setTotalGoals(int totalGoals);
     void setTotalCards(int totalCards);
 
-    void insertPlayer(shared_ptr<Player> player);
+    void insertPlayer(const shared_ptr<Player>& player);
     void removePLayer(shared_ptr<Player> player);
     bool isEmptyTeam() const;
     void updatePoints(int points);
@@ -44,7 +44,7 @@ public:
     void fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player> , T>& targetTree,  AVLTree<shared_ptr<Player> , T>& mergedTree, bool doInsert);
 
     template<class T>
-    static shared_ptr<shared_ptr<Player>> mergeSortedArrays(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
+    static shared_ptr<Player>* mergeSortedArrays(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
                                       int sizeTarget, int sizeMerged);
 
 

@@ -14,4 +14,8 @@ add_executable(data_s_v3 main.cpp
         SortTeamById.h
         SortTeamById.cpp
         Team.h
-        Team.cpp)
+        Team.cpp
+        TwoWayList.h
+        worldcup23a1.h
+        worldcup23a1.cpp
+        wet1util.h)
