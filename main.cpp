@@ -51,7 +51,7 @@ int main() {
     cout << "the points of team 1:" << world.get_team_points(1).ans() << endl;
     cout << "--------------------------\n";
     cout << "try to unite:\n";
-    //world.unite_teams(1,2,2);
+    world.unite_teams(1,2,2);
     cout << "united:\n";
     return 0;
 }

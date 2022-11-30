@@ -112,7 +112,7 @@ shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &tar
 
     int size = sizeTarget+sizeMerged;
 
-    shared_ptr<Player>* newTeam = (shared_ptr<Player>*) malloc(sizeof(shared_ptr<Player>)*(size));
+    shared_ptr<Player>* newTeam = new shared_ptr<Player>[size];
     int index1=0;
     int index2=0;
     int i=0;
