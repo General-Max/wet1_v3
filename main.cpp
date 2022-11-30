@@ -8,9 +8,11 @@
 #include "memory"
 #include "worldcup23a1.h"
 using std::shared_ptr;
+using std::cout;
+using std::endl;
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    cout << "Hello, World!" << endl;
     world_cup_t world;
     world.add_team(1, 0);
     world.add_team(2, 0);
@@ -45,5 +47,9 @@ int main() {
     world.add_player(90, 1, 1, 10, 7, true);
     world.remove_team(2);
     world.remove_player(21);
+
+    cout<<"the points of team 1:" << world.get_team_points(1).ans();
+    
+
     return 0;
 }

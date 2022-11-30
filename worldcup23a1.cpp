@@ -256,3 +256,27 @@ void world_cup_t::insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::B
         m_playersListByScore.insertAfter(newListNode, (newNode->m_right->m_data)->getDequePtr());
     }
 }
+
+output_t<int> world_cup_t::get_team_points(int teamId)
+{
+    if(teamId<=0){
+        return output_t<int>(StatusType::INVALID_INPUT);
+    }
+    
+    shared_ptr<Team> team = m_teams.find(teamId)->m_data;
+    if(team == nullptr){
+        return StatusType::FAILURE;
+    }
+    int points=0;
+    try
+    {
+        points=team->getPoints();
+    }
+    catch(std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    
+
+    return points;
+}
