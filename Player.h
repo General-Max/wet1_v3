@@ -52,7 +52,7 @@ private:
     bool m_goalKeeper;
     Team* m_team_ptr;
     TwoWayList<shared_ptr<Player>>::ListNode* m_dequePtr;
-
+//
 };
 
 #endif // EX1_Player_H
