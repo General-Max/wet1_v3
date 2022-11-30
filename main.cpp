@@ -48,10 +48,6 @@ int main() {
     world.remove_team(2);
     world.remove_player(21);
     world.unite_teams(1, 2, 1);
-    std::shared_ptr<std::shared_ptr<int>> table;
-
-    //reset the table to fit an array of 10 nodes
-    table.reset(new std::shared_ptr<int>[10],[](std::shared_ptr<int> * p) {delete [] p;});
 
     cout << "the points of team 1:" << world.get_team_points(1).ans() << endl;
     cout << "--------------------------\n";

@@ -107,8 +107,8 @@ StatusType world_cup_t::remove_player(int playerId)
         m_playersById.remove(playerId);
         m_playersByScore.remove(playerToRemove);
         playerTeam->removePLayer(playerToRemove);
-        if(m_validTeams.find(playerToRemove->getTeamId()) != nullptr){
-            removeIfNodValidTeam(m_validTeams.find(playerToRemove->getTeamId())->m_data);
+        if (!isValidTeam(playerTeam) && m_validTeams.find(playerTeam->getTeamId()) != nullptr){
+            m_validTeams.remove(playerTeam->getTeamId());
         }
         std::cout << "AFTER REMOVE players by score: " <<std::endl;
          m_playersByScore.printD(m_playersByScore.getRoot(), 10);
@@ -215,7 +215,9 @@ output_t<int> world_cup_t::get_num_played_games(int playerId)
     return played;
 }
 
-bool world_cup_t::isValidTeam(shared_ptr<Team> team) {
+//can be shared pyr or weak ptr
+template <class S>
+bool world_cup_t::isValidTeam(S team) {
     return (team->getTotalPlayers()>=PLAYERS_NUM_IN_VALID_TEAM && team->getGoalkeepers()>0);
 }
 

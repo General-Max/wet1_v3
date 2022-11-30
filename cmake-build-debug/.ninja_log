@@ -80,3 +80,12 @@
 60	2291	6915551856461745	CMakeFiles/data_s_v3.dir/worldcup23a1.cpp.obj	d7dfef697b81eefa
 5	889	6915552056225016	CMakeFiles/data_s_v3.dir/Team.cpp.obj	ea4500cf39f136da
 890	1138	6915552058682635	data_s_v3.exe	101ac9a5bd709106
+11	611	6915556319037999	CMakeFiles/data_s_v3.dir/Player.cpp.obj	837f15b06c69f4a4
+18	613	6915556319032724	CMakeFiles/data_s_v3.dir/SortTeamById.cpp.obj	b81d80581328a284
+4	665	6915556319582596	CMakeFiles/data_s_v3.dir/main.cpp.obj	525542aa32994761
+25	903	6915556321970146	CMakeFiles/data_s_v3.dir/worldcup23a1.cpp.obj	d7dfef697b81eefa
+904	1090	6915556323778866	data_s_v3.exe	101ac9a5bd709106
+3	510	6915556560969875	CMakeFiles/data_s_v3.dir/main.cpp.obj	525542aa32994761
+511	732	6915556563130135	data_s_v3.exe	101ac9a5bd709106
+3	674	6915558255966624	CMakeFiles/data_s_v3.dir/worldcup23a1.cpp.obj	d7dfef697b81eefa
+675	875	6915558257947852	data_s_v3.exe	101ac9a5bd709106

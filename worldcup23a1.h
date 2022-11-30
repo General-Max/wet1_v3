@@ -50,7 +50,8 @@ private:
 
     void insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::BinNode* newNode);;
 
-    bool isValidTeam(shared_ptr<Team> team);
+    template<class S>
+    bool isValidTeam(S team);
 
     void addIfValidTeam(shared_ptr<Team> team);
 
