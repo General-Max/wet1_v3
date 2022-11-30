@@ -48,8 +48,10 @@ int main() {
     world.remove_team(2);
     world.remove_player(21);
 
-    cout<<"the points of team 1:" << world.get_team_points(1).ans();
-    
-
+    cout << "the points of team 1:" << world.get_team_points(1).ans() << endl;
+    cout << "--------------------------\n";
+    cout << "try to unite:\n";
+    //world.unite_teams(1,2,2);
+    cout << "united:\n";
     return 0;
 }

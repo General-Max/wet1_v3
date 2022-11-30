@@ -277,6 +277,41 @@ output_t<int> world_cup_t::get_team_points(int teamId)
         return StatusType::ALLOCATION_ERROR;
     }
     
-
     return points;
 }
+
+StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
+{
+    if(newTeamId<=0 || teamId1<=0 || teamId2<=0 || teamId1==teamId2){
+        return StatusType::INVALID_INPUT;
+    }
+
+    shared_ptr<Team> team1 = m_teams.find(teamId1)->m_data;
+    shared_ptr<Team> team2 = m_teams.find(teamId2)->m_data;
+    shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
+
+    if(team1==nullptr || team2==nullptr || ((newTeam!= nullptr && newTeamId!=teamId1) && (newTeam!= nullptr && newTeamId!=teamId2))){
+        return StatusType::FAILURE;
+    }
+
+    try{
+        if(teamId1==newTeamId){
+            team1->merge(team2);
+        }
+        else if(teamId2==newTeamId){
+           team2->merge(team1);
+        }
+        else{
+            shared_ptr<Team> newTeam = std::make_shared<Team>(newTeamId,0);
+            newTeam->merge(team1);
+            newTeam->merge(team2);
+        }
+    
+    }
+    catch(std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
+
+    return StatusType::SUCCESS;
+}
+

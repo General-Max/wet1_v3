@@ -56,7 +56,6 @@ private:
 
     void removeIfNodValidTeam(shared_ptr<Team> team);
 
-
 public:
     // <DO-NOT-MODIFY> {
 
@@ -80,8 +79,8 @@ public:
     output_t<int> get_num_played_games(int playerId);
 
     output_t<int> get_team_points(int teamId);
-//
-//    StatusType unite_teams(int teamId1, int teamId2, int newTeamId);
+
+    StatusType unite_teams(int teamId1, int teamId2, int newTeamId);
 //
 //    output_t<int> get_top_scorer(int teamId);
 //

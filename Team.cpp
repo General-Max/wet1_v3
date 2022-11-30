@@ -103,6 +103,7 @@ AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
     return this->m_teamPlayersByID;
 }
 
+
 template<class T>
 shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
                         int sizeTarget, int sizeMerged) {
@@ -143,12 +144,66 @@ shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &tar
     return newTeam;
 }
 
-
-void Team::merge(shared_ptr<Team> merged)
+/*
+void Team::merge(shared_ptr<Team> toMerge)
 {
-    fillNewTree(merged, this->m_teamPlayersByID, merged->m_teamPlayersByID, true);
-    fillNewTree(merged, this->m_teamPlayersByScore, merged->m_teamPlayersByScore, false);
-    this->updatePoints(merged->getPoints());
+
+    shared_ptr<Player>* originalPlayersById = m_teamPlayersByID.inOrderArray();
+    shared_ptr<Player>* originalPlayersByScore = m_teamPlayersByScore.inOrderArray();
+    shared_ptr<Player>* playersToMergeById = toMerge->m_teamPlayersByID.inOrderArray();
+    shared_ptr<Player>* playersToMergeByScore = toMerge->m_teamPlayersByID.inOrderArray();
+
+    int originalSize = m_teamPlayersByID.getSize();
+    int toMergeSize = toMerge->m_teamPlayersByID.getSize();
+
+    shared_ptr<Player>* newPlayersById = mergeSortedArrays(originalPlayersById, originalSize,playersToMergeById, toMergeSize);
+    shared_ptr<Player>* newPlayersByScore = mergeSortedArrays(originalPlayersByScore, originalSize,playersToMergeByScore, toMergeSize);
+
+}
+
+template<class T>
+shared_ptr<Player>* Team::mergeSortedArrays(shared_ptr<Player>* arr1, int size1,shared_ptr<Player>* arr2, int size2)
+{
+    int size = size1+size2;
+    
+    shared_ptr<Player>* newArr = (shared_ptr<Player>*) malloc(sizeof(shared_ptr<Player>)*(size));
+    int index1=0;
+    int index2=0;
+    int i=0;
+    while(index1<size1 && index2<size2){
+        if(T::lessThan(targetArray[index1], mergedArray[index2])){
+            newTeam[i] = targetArray[index1];
+            index1++;
+        }
+        else{
+            newTeam[i] = mergedArray[index2];
+            index2++;
+        }
+        i++;
+    }
+
+    for(int j = index1; j<sizeTarget;j++)
+    {
+        newTeam[i]=targetArray[index1];
+        index1++;
+        i++;
+    }
+
+    for(int j = index2; j<sizeMerged;j++)
+    {
+        newTeam[i]=mergedArray[index2];
+        index2++;
+        i++;
+    }
+}
+*/
+
+
+void Team::merge(shared_ptr<Team> toMerge)
+{
+    fillNewTree(toMerge, this->m_teamPlayersByID, toMerge->m_teamPlayersByID);
+    fillNewTree(toMerge, this->m_teamPlayersByScore, toMerge->m_teamPlayersByScore);
+    this->updatePoints(toMerge->getPoints());
 }
 
 void Team::unite(shared_ptr<Team> team1, shared_ptr<Team> team2, int newTeamId) {
@@ -159,7 +214,7 @@ void Team::unite(shared_ptr<Team> team1, shared_ptr<Team> team2, int newTeamId) 
 }
 
 template<class T>
-void Team::fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree, bool doInsert) {
+void Team::fillNewTree(shared_ptr<Team> toMerge, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree) {
     int sizeTarget = targetTree.getSize();
     int sizeMerged = mergedTree.getSize();
     int size = sizeTarget+sizeMerged;
@@ -171,18 +226,18 @@ void Team::fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player>, T>& 
 
 
     for(int i=0;i<size;i++){
-        if(doInsert){
-            if(newArray[i]->getGoalKeeper()){
-                this->m_goalkeepers++;
-            }
-            m_totalCards+=newArray[i]->getCards();
-            m_totalGoals+=newArray[i]->getGoals();
-            m_totalPlayers++;
+        if(newArray[i]->getGoalKeeper()){
+            this->m_goalkeepers++;
         }
+        m_totalCards+=newArray[i]->getCards();
+        m_totalGoals+=newArray[i]->getGoals();
+        m_totalPlayers++;
+
         targetTree.insert(newArray[i]);
     }
     delete newArray;
 }
+
 
 Team::~Team() {
     std::cout << "delete team " << this->m_teamId << std::endl;
