@@ -106,7 +106,7 @@ AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
 
 template<class T>
 shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
-                        int sizeTarget, int sizeMerged) {
+                        int sizeTarget, int sizeMerged){
     shared_ptr<Player>* targetArray = targetTree.inOrderArray();
     shared_ptr<Player>* mergedArray = mergedTree.inOrderArray();
 
