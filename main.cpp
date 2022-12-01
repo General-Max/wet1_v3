@@ -71,7 +71,12 @@ int main() {
         cout<<arr[i]<<endl;
     }
     delete[] arr;
-    cout << "done";
+    cout << "done" << endl;
+
+    cout << "closet player" << endl;
+    cout << world.get_closest_player(90, 1).ans() << endl;
+    cout << "found"<<endl;
+
 
     return 0;
 }

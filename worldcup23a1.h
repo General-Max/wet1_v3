@@ -57,6 +57,8 @@ private:
 
     void removeIfNodValidTeam(shared_ptr<Team> team);
 
+    int closest(shared_ptr<Player> player, shared_ptr<Player> prevPlayer, shared_ptr<Player> nextPlayer);
+
 public:
     // <DO-NOT-MODIFY> {
 
@@ -88,8 +90,8 @@ public:
     output_t<int> get_all_players_count(int teamId);
 
     StatusType get_all_players(int teamId, int *const output);
-//
-//    output_t<int> get_closest_player(int playerId, int teamId);
+
+    output_t<int> get_closest_player(int playerId, int teamId);
 //
 //    output_t<int> knockout_winner(int minTeamId, int maxTeamId);
 

@@ -430,3 +430,78 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output)
     }
     return StatusType::SUCCESS;
 }
+
+output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
+{
+    if(playerId<=0 || teamId<=0){
+        return StatusType::INVALID_INPUT;
+    }
+    if(m_numPlayers==1){
+        return StatusType::FAILURE;
+    }
+    try{
+        if(m_teams.find(teamId)!=nullptr){
+            shared_ptr<Team> team = m_teams.find(teamId)->m_data;
+            if(team->findPlayer(playerId)!= nullptr){
+                shared_ptr<Player> player = team->findPlayer(playerId);
+                shared_ptr<Player> prevPlayer = nullptr;
+                shared_ptr<Player> nextPlayer = nullptr;
+
+                if(player->getDequePtr()->m_prev!=nullptr){
+                    prevPlayer = player->getDequePtr()->m_prev->m_nodeData;
+                }
+                if(player->getDequePtr()->m_next!=nullptr){
+                    nextPlayer = player->getDequePtr()->m_next->m_nodeData;
+                }
+
+                if(prevPlayer==nullptr && nextPlayer!=nullptr){
+                    return nextPlayer->getPlayerId();
+                }
+                else if(prevPlayer!=nullptr && nextPlayer==nullptr){
+                    return prevPlayer->getPlayerId();
+                }
+
+                return closest(player, prevPlayer, nextPlayer);
+
+            }
+            return StatusType::FAILURE;
+        }
+        return StatusType::FAILURE;
+    }
+    catch(std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
+
+    return StatusType::FAILURE;
+
+}
+
+int world_cup_t::closest(shared_ptr<Player> player, shared_ptr<Player> prevPlayer, shared_ptr<Player> nextPlayer)
+{
+    if(player->getGoals()-prevPlayer->getGoals() < player->getGoals()-nextPlayer->getGoals()){
+        return prevPlayer->getPlayerId();
+    }
+    else if(player->getGoals()-prevPlayer->getGoals() > player->getGoals()-nextPlayer->getGoals()){
+        return nextPlayer->getPlayerId();
+    }
+
+    if(player->getCards()-prevPlayer->getCards() < player->getCards()-nextPlayer->getCards()){
+            return prevPlayer->getPlayerId();
+    }
+    else if(player->getCards()-prevPlayer->getCards() > player->getCards()-nextPlayer->getCards()){
+        return nextPlayer->getPlayerId();
+    }
+
+        
+    if(player->getPlayerId()-prevPlayer->getPlayerId() < player->getPlayerId()-nextPlayer->getPlayerId()){
+        return prevPlayer->getPlayerId();
+    }
+    else if(player->getPlayerId()-prevPlayer->getPlayerId() > player->getPlayerId()-nextPlayer->getPlayerId()){
+        return nextPlayer->getPlayerId();
+    }
+
+    if(prevPlayer->getPlayerId()>nextPlayer->getPlayerId()){
+        return prevPlayer->getPlayerId();
+    }
+    return nextPlayer->getPlayerId();
+}

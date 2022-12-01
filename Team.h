@@ -53,6 +53,8 @@ public:
 
     void getTeamPlayers(int *const output);
 
+    shared_ptr<Player> findPlayer(int playerId);
+
 private:
     int m_teamId;
     int m_points;

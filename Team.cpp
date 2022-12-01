@@ -266,7 +266,16 @@ void Team::getTeamPlayers(int *const output)
         output[i]=playersArray[i]->getPlayerId();
     }
     delete[] playersArray;
-
 }
+
+shared_ptr<Player> Team::findPlayer(int playerId)
+{
+    if(m_teamPlayersByID.find(playerId)!=nullptr){
+        shared_ptr<Player> player = m_teamPlayersByID.find(playerId)->m_data;
+        return player;
+    }
+    return nullptr;
+}
+
 
 
