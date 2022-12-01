@@ -259,3 +259,14 @@ int Team::getTopScorerId()
     return m_teamPlayersByScore.getMaxValueInTree()->getPlayerId();
 }
 
+void Team::getTeamPlayers(int *const output)
+{
+    shared_ptr<Player>* playersArray = m_teamPlayersByScore.inOrderArray();
+    for(int i=0;i<m_totalPlayers;i++){
+        output[i]=playersArray[i]->getPlayerId();
+    }
+    delete[] playersArray;
+
+}
+
+

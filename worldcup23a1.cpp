@@ -374,7 +374,7 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
     if(teamId<0){
         return m_numPlayers;
     }
-    
+
     if(m_teams.find(teamId)!=nullptr){
         shared_ptr<Team> team = m_teams.find(teamId)->m_data;
         return team->getTotalPlayers(); 
@@ -386,4 +386,47 @@ output_t<int> world_cup_t::get_all_players_count(int teamId)
 
     return StatusType::FAILURE;
 
+}
+
+
+StatusType world_cup_t::get_all_players(int teamId, int *const output)
+{
+    if(teamId==0 || output == nullptr){
+        return StatusType::INVALID_INPUT;
+    }
+
+    if(teamId<0){
+        if(m_numPlayers<=0){
+            return StatusType::FAILURE;
+        }
+        try{
+            shared_ptr<Player>* playersArray = m_playersByScore.inOrderArray();
+            for(int i=0;i<m_numPlayers;i++){
+                output[i]=playersArray[i]->getPlayerId();
+            }
+            delete[] playersArray;
+            return StatusType::SUCCESS;
+        }
+        catch(std::bad_alloc&){
+            return StatusType::ALLOCATION_ERROR;
+        }
+    }
+
+    try{
+        if(m_teams.find(teamId)!=nullptr){
+            shared_ptr<Team> team = m_teams.find(teamId)->m_data;
+            if(team->getTotalPlayers()<=0){
+                return StatusType::FAILURE;
+            }
+            team->getTeamPlayers(output);
+            return StatusType::SUCCESS;
+        }
+        else{
+            return StatusType::FAILURE;
+        }
+    }
+    catch(std::bad_alloc&){
+        return StatusType::ALLOCATION_ERROR;
+    }
+    return StatusType::SUCCESS;
 }

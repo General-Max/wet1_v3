@@ -51,6 +51,7 @@ public:
 
     int getTopScorerId();
 
+    void getTeamPlayers(int *const output);
 
 private:
     int m_teamId;

@@ -63,7 +63,15 @@ int main() {
     cout << world.get_all_players_count(-1).ans();
     cout << "\n";
 
-    
+    cout << "get players";
+    int s = world.get_all_players_count(-1).ans();
+    int* arr = new int[s];
+    world.get_all_players(-1,arr);
+    for(int i=0;i<s;i++){
+        cout<<arr[i]<<endl;
+    }
+    delete[] arr;
+    cout << "done";
 
     return 0;
 }
