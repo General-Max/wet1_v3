@@ -74,7 +74,7 @@ int main() {
     cout << "done" << endl;
 
     cout << "closet player" << endl;
-    cout << world.get_closest_player(90, 1).ans() << endl;
+    cout << world.get_closest_player(90, 2).ans() << endl;
     cout << "found"<<endl;
 
 
