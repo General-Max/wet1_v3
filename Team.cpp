@@ -278,4 +278,8 @@ shared_ptr<Player> Team::findPlayer(int playerId)
 }
 
 
-
+ostream& operator<<(ostream& os, const Team& team)
+{
+    os << "team id: " <<  team.getTeamId() << ", members: " << team.getTotalPlayers();
+    return os;
+}

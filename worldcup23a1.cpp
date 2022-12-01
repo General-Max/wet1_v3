@@ -524,8 +524,8 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     }
 
     if(realSize == 0){
-        return StatusType::FAILURE;
         delete[] pairs;
+        return StatusType::FAILURE;
     }
     
     while(realSize>1){

@@ -55,6 +55,9 @@ public:
 
     shared_ptr<Player> findPlayer(int playerId);
 
+    friend ostream& operator<<(ostream& os, const Team& team);
+
+
 private:
     int m_teamId;
     int m_points;
