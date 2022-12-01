@@ -55,7 +55,14 @@ int main() {
     world.unite_teams(1,2,2);
     cout << "united\n";
 
+    cout << "top scorer: ";
     cout << world.get_top_scorer(-1).ans();
+    cout << "\n";
+
+    cout << "players count";
+    cout << world.get_all_players_count(-1).ans();
+    cout << "\n";
+
     
 
     return 0;

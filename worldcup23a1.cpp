@@ -366,3 +366,24 @@ output_t<int> world_cup_t::get_top_scorer(int teamId)
 
 }
 
+output_t<int> world_cup_t::get_all_players_count(int teamId)
+{
+    if(teamId==0){
+        return StatusType::INVALID_INPUT;
+    }
+    if(teamId<0){
+        return m_numPlayers;
+    }
+    
+    if(m_teams.find(teamId)!=nullptr){
+        shared_ptr<Team> team = m_teams.find(teamId)->m_data;
+        return team->getTotalPlayers(); 
+    }
+    else{
+        shared_ptr<Team> newTeam = nullptr;
+        return StatusType::FAILURE;
+    }
+
+    return StatusType::FAILURE;
+
+}
