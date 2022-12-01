@@ -505,3 +505,99 @@ int world_cup_t::closest(shared_ptr<Player> player, shared_ptr<Player> prevPlaye
     }
     return nextPlayer->getPlayerId();
 }
+
+output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
+{
+    if(minTeamId<0 || maxTeamId<0 || maxTeamId<minTeamId){
+        return StatusType::INVALID_INPUT;
+    }
+    
+    if(m_validTeams.getSize()<=0){
+        return StatusType::FAILURE;
+    }
+
+    Pair* pairs = fill(minTeamId, maxTeamId);
+
+    int realSize = 0;
+    while(pairs[realSize].m_teamId>0){
+        realSize++;
+    }
+
+    if(realSize == 0){
+        return StatusType::FAILURE;
+        delete[] pairs;
+    }
+    
+    while(realSize>1){
+        int pos =0;
+        for(int i=0;i<realSize;i+=2){
+            if(i+1<realSize){
+                if(pairs[i].m_score<pairs[i+1].m_score){
+                    pairs[pos] = pairs[i+1];
+                    pairs[pos].m_score += (pairs[i].m_score+WIN);
+                }
+                else if(pairs[i].m_score>pairs[i+1].m_score){
+                    pairs[pos] = pairs[i];
+                    pairs[pos].m_score += (pairs[i+1].m_score+WIN);
+                }
+                else{
+                    if(pairs[i].m_teamId<pairs[i+1].m_teamId){
+                        pairs[pos] = pairs[i+1];
+                        pairs[pos].m_score += (pairs[i].m_score+WIN);
+                    }
+                    else{
+                        pairs[pos] = pairs[i];
+                        pairs[pos].m_score += (pairs[i+1].m_score+WIN);
+                    }
+                }
+                pos++;
+            }
+            else{
+                pairs[pos]=pairs[i];
+            }
+        }
+    }
+
+    int winnerId = pairs[0].m_teamId;
+    delete[] pairs;
+    return winnerId;
+}
+
+
+world_cup_t::Pair* world_cup_t::fill(int min, int max)
+{
+    int size = max-min; 
+    Pair* pairs = new Pair[size];
+    for(int i=0;i<size;i++){
+        struct Pair pair;
+        pair.m_score = -1;
+        pair.m_teamId = -1;
+        pairs[i] = pair;;
+    }
+
+    fill_aux(pairs, 0, min, max, m_validTeams.getRoot()); 
+    return pairs;
+}
+
+void world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root)
+{
+    if (root == nullptr)
+        return;
+    
+    if (root->m_data->getTeamId() > min){
+        fill_aux(pairs,pos, min, max, root->m_left);
+    }
+    
+    if (root->m_data->getTeamId()>=min && root->m_data->getTeamId()<=max){
+        int score = root->m_data->getScore();
+        struct Pair pair;
+        pair.m_score = score;
+        pair.m_teamId = root->m_data->getTeamId();
+        pairs[pos] = pair;
+    }
+     
+    /* recursively call the right subtree */
+   fill_aux(pairs, ++pos, min, max, root->m_right);
+}
+
+

@@ -30,6 +30,11 @@ const int PLAYERS_NUM_IN_VALID_TEAM = 11;
 const int SINGLE_PLAYER = 1;
 class world_cup_t {
 private:
+
+    struct Pair {
+        int m_teamId;
+        int m_score;
+    };
     //
     // Here you may add anything you want
     //
@@ -58,6 +63,11 @@ private:
     void removeIfNodValidTeam(shared_ptr<Team> team);
 
     int closest(shared_ptr<Player> player, shared_ptr<Player> prevPlayer, shared_ptr<Player> nextPlayer);
+
+    Pair* fill(int min, int max);
+
+    void fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root);
+
 
 public:
     // <DO-NOT-MODIFY> {
@@ -92,8 +102,8 @@ public:
     StatusType get_all_players(int teamId, int *const output);
 
     output_t<int> get_closest_player(int playerId, int teamId);
-//
-//    output_t<int> knockout_winner(int minTeamId, int maxTeamId);
+
+   output_t<int> knockout_winner(int minTeamId, int maxTeamId);
 
     // } </DO-NOT-MODIFY>
 };

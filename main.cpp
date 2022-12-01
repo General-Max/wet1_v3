@@ -78,5 +78,20 @@ int main() {
     cout << "found"<<endl;
 
 
+    for(int i=0;i<14;i++)
+    {
+        world.add_player(i, 7, 1, 2, 2, true);
+    }
+
+    for(int i=0;i<14;i++)
+    {
+        world.add_player(i*10, 9, 1, 2, 2, true);
+    }
+
+    cout << "knockout:" << endl;
+    cout << world.knockout_winner(6,10).ans() << endl;
+    cout << "done\n";
+    
+
     return 0;
 }
