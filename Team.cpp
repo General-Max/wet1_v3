@@ -253,3 +253,9 @@ void Team::fillNewTree(shared_ptr<Team> toMerge, AVLTree<shared_ptr<Player>, T>&
 Team::~Team() {
     std::cout << "delete team " << this->m_teamId << std::endl;
 }
+
+int Team::getTopScorerId()
+{
+    return m_teamPlayersByScore.getMaxValueInTree()->getPlayerId();
+}
+

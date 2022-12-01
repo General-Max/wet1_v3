@@ -53,6 +53,10 @@ int main() {
     cout << "--------------------------\n";
     cout << "try to unite:\n";
     world.unite_teams(1,2,2);
-    cout << "united:\n";
+    cout << "united\n";
+
+    cout << world.get_top_scorer(-1).ans();
+    
+
     return 0;
 }

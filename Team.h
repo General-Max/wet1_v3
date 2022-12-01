@@ -49,6 +49,7 @@ public:
 
     //shared_ptr<Player>* Team::mergeSortedArrays(shared_ptr<Player>* arr1, int size1,shared_ptr<Player>* arr2, int size2);
 
+    int getTopScorerId();
 
 
 private:

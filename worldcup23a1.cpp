@@ -322,3 +322,47 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
     return StatusType::SUCCESS;
 }
 
+output_t<int> world_cup_t::get_top_scorer(int teamId)
+{
+    if(teamId==0){
+        return StatusType::INVALID_INPUT;
+    }
+    if(teamId<0){
+        int id=0;
+        try{
+            if(m_numPlayers<=0){
+                return StatusType::FAILURE;
+            }
+
+            shared_ptr<Player> top_scorer = m_playersByScore.getMaxValueInTree();        
+            id = top_scorer->getPlayerId();
+
+        }
+        catch(std::bad_alloc&){
+            return StatusType::ALLOCATION_ERROR;
+        }
+        return id;
+    }
+    try
+    {
+        if(m_teams.find(teamId)!=nullptr){
+            shared_ptr<Team> team = m_teams.find(teamId)->m_data;
+            if(team->getTotalPlayers()<=0){
+                return StatusType::FAILURE;
+            }
+            return team->getTopScorerId(); 
+        }
+        else{
+            shared_ptr<Team> newTeam = nullptr;
+            return StatusType::FAILURE;
+        }
+    }
+    catch(const std::bad_alloc&)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    
+    return StatusType::FAILURE;
+
+}
+
