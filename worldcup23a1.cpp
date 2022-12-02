@@ -556,6 +556,13 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
                 pairs[pos]=pairs[i];
             }
         }
+        if(realSize%2==0){          //upper bound;
+            realSize = realSize/2;
+        }
+        else{
+            realSize = realSize/2+1;
+        }
+        
     }
 
     int winnerId = pairs[0].m_teamId;
