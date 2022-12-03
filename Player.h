@@ -39,7 +39,6 @@ public:
 
     void updateCards (int newCardsNumber);
 
-    //TODO: CHECK IF NEED
     void setGoalKeeper(bool isGoalKeeper);
 
     void setTeamPtr(Team*  teamPtr);

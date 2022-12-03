@@ -22,7 +22,6 @@
 #include "TwoWayList.h"
 #include "SortById.h"
 #include "SortTeamById.h"
-#include <memory>
 
 const int DRAW = 1;
 const int WIN = 3;

@@ -4,7 +4,6 @@
 #include "AVLTree.h"
 #include "SortById.h"
 #include "SortByScore.h"
-#include <memory>
 
 using std::shared_ptr;
 

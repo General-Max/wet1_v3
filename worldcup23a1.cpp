@@ -1,20 +1,11 @@
 #include "worldcup23a1.h"
-#include "Team.h"
-#include "Player.h"
-#include <memory>
 
 world_cup_t::world_cup_t() : m_numPlayers(0) {}
 
-world_cup_t::~world_cup_t()
-{
-    // TODO: check if needed: delete m_topScorer
-    // TODO:: check if all the rest deleted automatically because destroying this call each one destructor
-}
-
+world_cup_t::~world_cup_t() { }
 
 StatusType world_cup_t::add_team(int teamId, int points)
 {
-    // TODO: Your code goes here
     if(teamId<=0 || points<0){
         return StatusType::INVALID_INPUT;
     }
@@ -101,7 +92,6 @@ StatusType world_cup_t::remove_player(int playerId)
     }
     try{
         shared_ptr<Player> playerToRemove = m_playersById.find(playerId)->m_data;
-      //  shared_ptr<Team> playerTeam = std::shared_ptr<Team>(playerToRemove->getTeamPtr());
         Team *playerTeam = playerToRemove->getTeamPtr();
         m_playersListByScore.removeNode(playerToRemove->getDequePtr());
         m_playersById.remove(playerId);
@@ -110,8 +100,7 @@ StatusType world_cup_t::remove_player(int playerId)
         if (!isValidTeam(playerTeam) && m_validTeams.find(playerTeam->getTeamId()) != nullptr){
             m_validTeams.remove(playerTeam->getTeamId());
         }
-        std::cout << "AFTER REMOVE players by score: " <<std::endl;
-         m_playersByScore.printD(m_playersByScore.getRoot(), 10);
+        m_playersByScore.printD(m_playersByScore.getRoot(), 10);
         m_playersListByScore.printList();
         m_numPlayers--;
     }
@@ -125,7 +114,6 @@ StatusType world_cup_t::remove_player(int playerId)
 StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
                                             int scoredGoals, int cardsReceived)
 {
-    // TODO: Your code goes here
     if(playerId<=0 || gamesPlayed<0 || scoredGoals<0 || cardsReceived<0){
         return StatusType::INVALID_INPUT;
     }
@@ -143,7 +131,6 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         currentPlayer->updateGoals(scoredGoals);
         currentPlayer->updateCards(cardsReceived);
 
-        //    m_playersListByScore.printList();
         m_playersByScore.insert(currentPlayer);
         currentTeam->insertPlayer(currentPlayer);
         insertPlayerToList(m_playersByScore.find(currentPlayer));
@@ -152,8 +139,6 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         return StatusType::ALLOCATION_ERROR;
     }
 
-    m_playersByScore.printD(m_playersByScore.getRoot(), 10);
-    m_playersListByScore.printList();
     return StatusType::SUCCESS;
 }
 
@@ -215,50 +200,6 @@ output_t<int> world_cup_t::get_num_played_games(int playerId)
     return played;
 }
 
-//can be shared pyr or weak ptr
-template <class S>
-bool world_cup_t::isValidTeam(S team) {
-    return (team->getTotalPlayers()>=PLAYERS_NUM_IN_VALID_TEAM && team->getGoalkeepers()>0);
-}
-
-void world_cup_t::addIfValidTeam(shared_ptr<Team> team) {
-    // if the team keeps the valid teams condition and is not in the tree
-    if (isValidTeam(team) && m_validTeams.find(team->getTeamId()) == nullptr){
-        m_validTeams.insert(team);
-    }
-}
-
-void world_cup_t::removeIfNodValidTeam(shared_ptr<Team> team) {
-// if the team doesn't keep the valid teams condition and is in the tree
-    if (!isValidTeam(team) && m_validTeams.find(team->getTeamId()) != nullptr){
-        m_validTeams.remove(team);
-    }
-}
-
-void world_cup_t::insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::BinNode* newNode) {
-    TwoWayList<shared_ptr<Player>>::ListNode *newListNode = m_playersListByScore.initNode(newNode->m_data);
-    (newNode->m_data)->setDequePtr(newListNode);
-    // in case it is the first element in the list
-    if (m_numPlayers == SINGLE_PLAYER){
-        m_playersListByScore.setHead(newListNode);
-        return;
-    }
-    if(newNode->m_father != nullptr){
-        if(SortByScore::lessThan(newNode->m_father->m_data, newNode->m_data)){
-            m_playersListByScore.insertAfter(newListNode, (newNode->m_father->m_data)->getDequePtr());
-        }
-        else{
-            m_playersListByScore.insertBefore(newListNode, (newNode->m_father->m_data)->getDequePtr());
-        }
-    }
-    else if(newNode->m_right){
-        m_playersListByScore.insertBefore(newListNode, (newNode->m_right->m_data)->getDequePtr());
-    }
-    else{
-        m_playersListByScore.insertAfter(newListNode, (newNode->m_right->m_data)->getDequePtr());
-    }
-}
-
 output_t<int> world_cup_t::get_team_points(int teamId)
 {
     if(teamId<=0){
@@ -304,20 +245,33 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
     try{
         if(teamId1==newTeamId){
             team1->merge(team2);
+            m_teams.remove(team2);
+            m_validTeams.remove(team2);
         }
         else if(teamId2==newTeamId){
            team2->merge(team1);
+            m_teams.remove(team1);
+            m_validTeams.remove(team1);
         }
         else{
             shared_ptr<Team> newTeam = std::make_shared<Team>(newTeamId,0);
             newTeam->merge(team1);
             newTeam->merge(team2);
+            m_teams.insert(newTeam);
+            addIfValidTeam(newTeam);
+            m_teams.remove(team1);
+            m_validTeams.remove(team1);
+            m_teams.remove(team2);
+            m_validTeams.remove(team2);
         }
     
     }
     catch(std::bad_alloc&){
         return StatusType::ALLOCATION_ERROR;
     }
+
+    m_teams.printD(m_teams.getRoot(), 10);
+    m_validTeams.printD(m_teams.getRoot(), 10);
 
     return StatusType::SUCCESS;
 }
@@ -570,6 +524,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     return winnerId;
 }
 
+// auxiliary functions
 
 world_cup_t::Pair* world_cup_t::fill(int min, int max)
 {
@@ -582,7 +537,7 @@ world_cup_t::Pair* world_cup_t::fill(int min, int max)
         pairs[i] = pair;;
     }
 
-    fill_aux(pairs, 0, min, max, m_validTeams.getRoot()); 
+    fill_aux(pairs, 0, min, max, m_validTeams.getRoot());
     return pairs;
 }
 
@@ -607,4 +562,46 @@ void world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<share
    fill_aux(pairs, ++pos, min, max, root->m_right);
 }
 
+//can be shared pyr or weak ptr
+template <class S>
+bool world_cup_t::isValidTeam(S team) {
+    return (team->getTotalPlayers()>=PLAYERS_NUM_IN_VALID_TEAM && team->getGoalkeepers()>0);
+}
 
+void world_cup_t::addIfValidTeam(shared_ptr<Team> team) {
+    // if the team keeps the valid teams condition and is not in the tree
+    if (isValidTeam(team) && m_validTeams.find(team->getTeamId()) == nullptr){
+        m_validTeams.insert(team);
+    }
+}
+
+void world_cup_t::removeIfNodValidTeam(shared_ptr<Team> team) {
+// if the team doesn't keep the valid teams condition and is in the tree
+    if (!isValidTeam(team) && m_validTeams.find(team->getTeamId()) != nullptr){
+        m_validTeams.remove(team);
+    }
+}
+
+void world_cup_t::insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::BinNode* newNode) {
+    TwoWayList<shared_ptr<Player>>::ListNode *newListNode = m_playersListByScore.initNode(newNode->m_data);
+    (newNode->m_data)->setDequePtr(newListNode);
+    // in case it is the first element in the list
+    if (m_numPlayers == SINGLE_PLAYER){
+        m_playersListByScore.setHead(newListNode);
+        return;
+    }
+    if(newNode->m_father != nullptr){
+        if(SortByScore::lessThan(newNode->m_father->m_data, newNode->m_data)){
+            m_playersListByScore.insertAfter(newListNode, (newNode->m_father->m_data)->getDequePtr());
+        }
+        else{
+            m_playersListByScore.insertBefore(newListNode, (newNode->m_father->m_data)->getDequePtr());
+        }
+    }
+    else if(newNode->m_right){
+        m_playersListByScore.insertBefore(newListNode, (newNode->m_right->m_data)->getDequePtr());
+    }
+    else{
+        m_playersListByScore.insertAfter(newListNode, (newNode->m_right->m_data)->getDequePtr());
+    }
+}

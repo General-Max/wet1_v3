@@ -2,7 +2,6 @@
 #define DATA_STRUCTRS_WET1_SORTTEAMBYID_H
 
 #include "Team.h"
-#include <memory>
 
 using std::shared_ptr;
 

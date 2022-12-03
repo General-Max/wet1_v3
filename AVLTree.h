@@ -150,16 +150,6 @@ AVLTree<T, Comparison>& AVLTree<T, Comparison>::operator=(const AVLTree<T, Compa
     return *this;
 }
 
-//template<class T, class Comparison>
-//AVLTree<T, Comparison>::AVLTree(const AVLTree<T, Comparison>& tree):m_root(nullptr), m_minValueNode(nullptr), m_maxValueNode(nullptr),
-//                                                                    m_size(tree.getSize()){
-//    // todo: check if can be added to the comprehension list
-//    m_root = copyNode(m_root);
-//    m_minValueNode = findMin(m_root);
-//    m_maxValueNode = findMax(m_root);
-//}
-
-
 template<class T, class Comparison>
 void AVLTree<T, Comparison>::insert(T data) {
     if (&data == nullptr) {
@@ -178,15 +168,6 @@ void AVLTree<T, Comparison>::insert(T data) {
     m_size++;
 }
 
-//template<class T, class Comparison>
-//BinNode * AVLTree<T, Comparison>::find(const T& data){
-//    BinNode* node = findNode(m_root, data);
-//    if(node == nullptr){
-//        return nullptr;
-//    }
-//    return node;
-//}
-
 template<class T, class Comparison>
 template<class S>
 typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::find(const S& data){
@@ -196,15 +177,6 @@ typename AVLTree<T, Comparison>::BinNode *AVLTree<T, Comparison>::find(const S& 
     }
     return node;
 }
-
-//template<class T, class Comparison>
-//BinNode * AVLTree<T, Comparison>::find(int id){
-//    BinNode* node = findNode(m_root, id);
-//    if(node == nullptr){
-//        return nullptr;
-//    }
-//    return node;
-//}
 
 template<class T, class Comparison>
 template <class S>
