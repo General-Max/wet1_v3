@@ -245,24 +245,31 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
     try{
         if(teamId1==newTeamId){
             team1->merge(team2);
-            m_teams.remove(team2);
-            m_validTeams.remove(team2);
+            remove_team(teamId2);
+            addIfValidTeam(team1);
+
+            // m_validTeams.remove(team2);
         }
         else if(teamId2==newTeamId){
-           team2->merge(team1);
-            m_teams.remove(team1);
-            m_validTeams.remove(team1);
+            team2->merge(team1);
+            remove_team(teamId1);
+            addIfValidTeam(team2);
+            // m_teams.remove(team1);
+            // m_validTeams.remove(team1);
         }
         else{
-            shared_ptr<Team> newTeam = std::make_shared<Team>(newTeamId,0);
+            add_team(newTeamId, 0);
+            shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
             newTeam->merge(team1);
             newTeam->merge(team2);
-            m_teams.insert(newTeam);
+            remove_team(teamId1);
+            remove_team(teamId2);
+            //m_teams.insert(newTeam);
             addIfValidTeam(newTeam);
-            m_teams.remove(team1);
-            m_validTeams.remove(team1);
-            m_teams.remove(team2);
-            m_validTeams.remove(team2);
+            // m_teams.remove(team1);
+            // m_validTeams.remove(team1);
+            // m_teams.remove(team2);
+            // m_validTeams.remove(team2);
         }
     
     }
