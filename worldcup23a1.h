@@ -30,20 +30,12 @@ const int SINGLE_PLAYER = 1;
 class world_cup_t {
 private:
 
+    // struct for the knockout_player function
     struct Pair {
         int m_teamId;
         int m_score;
     };
-    //
-    // Here you may add anything you want
-    //
 
-    // turn to uniqe PTRs
-    //to do
-    //AVLTree<TripleNode*> playersById;
-    //AVLTree<TripleNode*> playersByGoals(or as they like);
-    //need deque of players
-    //AVLTree<Brackets>// the "cosher" teams
     int m_numPlayers;
     AVLTree<shared_ptr<Player>, SortByScore> m_playersByScore;
     AVLTree<shared_ptr<Player>, SortById> m_playersById;
@@ -51,20 +43,58 @@ private:
     AVLTree<shared_ptr<Team>, SortTeamById> m_validTeams;
     TwoWayList<shared_ptr<Player>> m_playersListByScore;
 
-
+    /**
+     * insert a new node to the players deque
+     * @param newNode to be inserted to the list
+     */
     void insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::BinNode* newNode);;
 
+    /**
+     * return true if team has at least 11 players and at least one goalkeeper
+     * @tparam S can be weak pointer or shared ptr pointer
+     * @param team
+     * @return
+     */
     template<class S>
     bool isValidTeam(S team);
 
+    /**
+     * Adds the team to the valid teams tree in case it keeps valid team's condition
+     * @param team
+     */
     void addIfValidTeam(shared_ptr<Team> team);
 
+    /**
+     * remove a node from the valid tree teams in case the team is no longer a valid node
+     * @param team
+     */
     void removeIfNodValidTeam(shared_ptr<Team> team);
 
+    /**
+     * the id of the closest player to the current one
+     * @param player
+     * @param prevPlayer the player with closest score from beneath
+     * @param nextPlayer the player with closest score from above
+     * @return
+     */
     int closest(shared_ptr<Player> player, shared_ptr<Player> prevPlayer, shared_ptr<Player> nextPlayer);
 
+    /**
+     * @param min
+     * @param max
+     * @return an array of pairs that contains the valid teams that their IDs are in
+     * the bounds
+     */
     Pair* fill(int min, int max);
 
+    /**
+     * recursively does the fill function task
+     * @param pairs an array to fill
+     * @param pos current position in the array
+     * @param min
+     * @param max
+     * @param root
+     */
     void fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root);
 
 

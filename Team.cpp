@@ -37,21 +37,6 @@ void Team::increasePlayedTogether()
     this->m_playedTogether++;
 }
 
-void Team::setTotalPlayers(int totalPlayers)
-{
-    this->m_totalPlayers = totalPlayers;
-}
-
-void Team::setTotalGoals(int totalGoals)
-{
-    this->m_totalGoals = totalGoals;
-}
-
-void Team::setTotalCards(int totalCards)
-{
-    this->m_totalCards = totalCards;
-}
-
 bool Team::isEmptyTeam() const {
     return m_totalPlayers == 0;
 }
@@ -160,13 +145,6 @@ void Team::merge(shared_ptr<Team> toMerge)
     fillNewTree(toMerge, this->m_teamPlayersByID, toMerge->m_teamPlayersByID);
     fillNewTree(toMerge, this->m_teamPlayersByScore, toMerge->m_teamPlayersByScore);
     this->updatePoints(toMerge->getPoints());
-}
-
-void Team::unite(shared_ptr<Team> team1, shared_ptr<Team> team2, int newTeamId) {
-    Team* newTeam = new Team(newTeamId, team1->getPoints()+team2->getPoints());
-
-    newTeam->merge(team1);
-    newTeam->merge(team2);
 }
 
 template<class T>

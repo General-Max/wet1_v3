@@ -1,7 +1,3 @@
-//
-// Created by User on 22/11/2022.
-//
-
 #ifndef EX1_AVLTREE_H
 #define EX1_AVLTREE_H
 
@@ -17,45 +13,104 @@ public:
         int m_height;
         T m_data;
     };
+
     // Constructors, Destructor, Assignment
+    /**
+     * C'tor of the AVLTree, creates and empty tree
+     */
     AVLTree();
 
-    // AVLTree(const AVLTree<T, Comparison> &tree);
 
+    /**
+     * opertor= for AVLTree
+     * copies the given tree to this tree
+     * @param tree tree to be assigned to this one
+     * @return new AVLTree
+     */
     AVLTree &operator=(const AVLTree<T, Comparison> &tree);
 
+    /**
+     * destructor of tree, remove and delete every node in the tree
+     */
     ~AVLTree();
 
     // Interface Functions
+
+    /**
+     * The function inserts a new value to tree, maintains the order and
+     * the height of every node.
+     * Updates the minimum and the maximum of the tree when needed.
+     * @param data a value to insert to the tree
+     */
     void insert(T data);
 
+    /**
+     * Finds and returns the node that contains the given data in the tree
+     * return nullptr if not exists
+     * @tparam S type of the given data
+     * @param data data to find
+     * @return
+     */
     template<class S>
     BinNode * find(const S &data);
 
+    /**
+     * remove the node that contains the given data
+     * @tparam S type of the given data
+     * @param data data to find and remove its node
+     */
     template<class S>
     void remove(const S &data);
 
-    int getHeight() const;
-
+    /**
+     * @return the number of elements in the tree
+     */
     int getSize() const;
 
+    /**
+     * @return the root of the tree
+     */
     BinNode* getRoot() const;
 
+    /**
+     * remove and delete all the nodes in the tree
+     */
     void emptyTree();
 
+    /**
+     * @return true if there aren't any elements in the tree, else false
+     */
     bool isEmpty() const;
-
-    void printH(BinNode *node, int space);
 
     void printD(BinNode *node, int space);
 
+    /**
+     * @return the minimum value in the tree (according to the sort function of the tree)
+     */
     T getMinValueInTree() const;
 
+    /**
+     * @return  the maximum value in the tree (according to the sort function of the tree)
+     */
     T getMaxValueInTree() const;
 
+    /**
+     * Creates a new array that sorted according to the sort function of the tree -
+     * go over the tree by inorder traversal
+     * @return the new array
+     */
     T* inOrderArray();
 
+    /**
+     * helper function of inOrderArray that recursively do the inorder traversal
+     * @param array an empty array to save the result to it
+     * @param node the current node the recursion goes over it in this round
+     * @param size the size of the array
+     * @param position the position in the array to where the next new data should be inserted to
+     * @return
+     */
     int auxInOrder(T* array, BinNode* node, int size, int position);
+
 private:
     //Tree fields
     BinNode *m_root;
@@ -64,21 +119,64 @@ private:
     int m_size;
 
      //Node Functions
+     /**
+      * creates a new node with the given data
+      * @param data
+      * @return the new noed
+      */
      BinNode *initNode(T data);
 
+     /**
+      * the function does the needed rotations in order to maintain the tree as a AVL tree
+      * @param node
+      * @return
+      */
      BinNode *balanceTree(BinNode *node);
 
+     /**
+      * insert a new node to the tree
+      * @param newNode node to add to tree
+      * @param currentNode the node from which the newNode is sought
+      * @param father the father node of the current node
+      * @return the next node to search from
+      */
      BinNode *insertNode(BinNode *newNode, BinNode *currentNode, BinNode *father);
 
+    /**
+     * remove a node from the tree
+     * @param currentNode the node from which the newNode is sought
+     * @param nodeToDelete the node that should be found and deleted
+     * @return the next node to search from
+     */
+    BinNode *removeNode(BinNode *currentNode, BinNode *nodeToDelete);
+
+     /**
+      * Helper function of find, recursively does the search
+      * @tparam S the type of the data that should be found
+      * @param node the node from which the newNode is sought
+      * @param data the data that should be found
+      * @return the next node to search from
+      */
     template<class S>
     BinNode *findNode(BinNode *node, const S &data);
 
-    BinNode *removeNode(BinNode *currentNode, BinNode *nodeToDelete);
-
+    /**
+     * @param node
+     * @return the height's difference of the given node
+     */
     int getBalanceFactor(BinNode *node) const;
 
+    /**
+     * @param node
+     * @return the height of the given node
+     */
     int height(const BinNode *node) const;
 
+    /**
+     * find the new height of node according to its sons nodes
+     * @param node
+     * @return the new height
+     */
     int findNewHeight(const BinNode *node) const;
 
     // Rotation Functions
@@ -93,14 +191,23 @@ private:
     // Constructor, Destructor helper functions
     BinNode* copyNode(BinNode *node);
 
-    void empty_aux(BinNode *node);
+    /**
+     * helper function for emptyTree function
+     * @param node from which to do the removal and deletion
+     */
+    void emptyAux(BinNode *node);
 
+
+    // finds the minimum/ maximum values in the sub-tree starts from node
+    // (according to the tree's sorted function)
     BinNode* findMin(BinNode* node) const;
 
     BinNode* findMax(BinNode* node) const;
 
-
 };
+
+
+// Functions implementation
 
 template<class T,class Comparison>
 T* AVLTree<T, Comparison>::inOrderArray()
@@ -138,7 +245,6 @@ AVLTree<T, Comparison>::~AVLTree(){
 
 template<class T, class Comparison>
 AVLTree<T, Comparison>& AVLTree<T, Comparison>::operator=(const AVLTree<T, Comparison> &tree){
-    // TODO: ADD CHECK IF SUCCEED BEFORE EMPTY
     if(&tree == this){
         return *this;
     }
@@ -156,7 +262,7 @@ void AVLTree<T, Comparison>::insert(T data) {
         return;
     }
     if (findNode(m_root, data) != nullptr) {
-        std::cout << "throw NodeExists()";
+        return;
     }
 
     auto *node = initNode(data);
@@ -187,11 +293,11 @@ void AVLTree<T, Comparison>::remove(const S& data) {
     BinNode* node_to_remove = findNode(m_root, data);
 
     if (node_to_remove == nullptr) {
-        std::cout << "throw NodeDoesntExist()";
+        return;
     }
 
+    // call the recursive function
     m_root = removeNode(node_to_remove, m_root);
-    // m_root = removeNode(m_root, node_to_remove);
     // update minimum and maximum tree nodes
     m_minValueNode = findMin(m_root);
     m_maxValueNode = findMax(m_root);
@@ -199,40 +305,29 @@ void AVLTree<T, Comparison>::remove(const S& data) {
 }
 
 template<class T, class Comparison>
-void AVLTree<T, Comparison>::empty_aux(AVLTree<T, Comparison>::BinNode* node) {
+void AVLTree<T, Comparison>::emptyAux(AVLTree<T, Comparison>::BinNode* node) {
     if(node == nullptr){
         return;
     }
 
     if(node->m_left){
-        empty_aux(node->m_left);
+        emptyAux(node->m_left);
     }
     if(node->m_right){
-        empty_aux(node->m_right);
+        emptyAux(node->m_right);
     }
-    //delete node->m_data;
-    std::cout << "delete node " << std::endl;
     delete node;
 }
 
 template<class T, class Comparison>
 void AVLTree<T, Comparison>::emptyTree() {
     if(m_size > 0){
-       // printD(m_root, 10);
-        empty_aux(m_root);
+        emptyAux(m_root);
         m_root = nullptr;
         m_minValueNode = nullptr;
         m_maxValueNode = nullptr;
         m_size = 0;
     }
-}
-
-template<class T, class Comparison>
-int AVLTree<T, Comparison>::getHeight()const{
-    if (m_root == nullptr) {
-        return 0;
-    }
-    return m_root->m_height;
 }
 
 template<class T, class Comparison>
@@ -257,17 +352,6 @@ void AVLTree<T, Comparison>::printD(AVLTree<T, Comparison>::BinNode *node, int s
     }
     std::cout << *node->m_data << "\n";
     printD(node->m_left, space);
-}
-
-template <class T, class Comparison>
-void AVLTree<T, Comparison>::printH(AVLTree<T, Comparison>::BinNode *node, int space){
-    if(node==nullptr)
-        return;
-    space += 10;
-    printH(node->m_right, space);
-    std::cout << std::endl;
-    std::cout << *node->m_data << ": "<< node->getHeight() << "\n";
-    printH(node->m_left, space);
 }
 
 template<class T, class Comparison>

@@ -20,19 +20,42 @@ public:
     ListNode *initNode(T data);
 
     // Two-Way List Functions
+    // constructor
     TwoWayList();
+
+    //  destructor
     ~TwoWayList();
 
-    ListNode* getHead();
-   // ListNode<T>* m_next;
 
+    /**
+     * sets the first element in the list
+     * @param newHeadNode
+     */
     void setHead(ListNode* newHeadNode);
-//    void setTail(ListNode<T>* newTailNode);
 
+    /**
+     * Sets the new node to be right after the prev one
+     * @param newNode
+     * @param prevNode
+     */
     void insertAfter(ListNode* newNode, ListNode* prevNode);
+
+    /**
+     * Sets the new node to be right after the prev one
+     * @param newNode
+     * @param nextNode
+     */
     void insertBefore(ListNode* newNode, ListNode* nextNode);
+
+    /**
+     * removes a node from the deque and connect its previous node to its next one
+     * @param nodeToDelete
+     */
     void removeNode(ListNode* nodeToDelete);
 
+    /**
+     * prints the list
+     */
     void printList();
 private:
     ListNode* m_head;
@@ -137,11 +160,6 @@ void TwoWayList<T>::printList()
 template<class T>
 void TwoWayList<T>::setHead(TwoWayList::ListNode *newHeadNode) {
     this->m_head = newHeadNode;
-}
-
-template<class T>
-typename TwoWayList<T>::ListNode *TwoWayList<T>::getHead() {
-    return m_head;
 }
 
 #endif //DATA_STRUCTRS_WET1_TwoWayList_H

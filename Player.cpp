@@ -2,14 +2,9 @@
 #include "Team.h"
 
 Player::Player(int playerId, int teamId, int gamesPlayed, int goals, int cards, bool goalkeeper) : m_playerId(playerId),
-                                                                                                   m_teamId(teamId), m_gamesPlayed(gamesPlayed), m_goals(goals), m_cards(cards), m_goalKeeper(goalkeeper){
-    std::cout << "create player " <<playerId <<std::endl;
-}
-
-Player::~Player(){
-    std::cout << "delete player " << this->m_playerId << std::endl;
-
-}
+                                                                                                   m_teamId(teamId), m_gamesPlayed(gamesPlayed),
+                                                                                                   m_goals(goals), m_cards(cards),
+                                                                                                   m_goalKeeper(goalkeeper){}
 
 int Player::getPlayerId() const {
     return this->m_playerId;

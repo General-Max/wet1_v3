@@ -29,7 +29,6 @@ StatusType world_cup_t::remove_team(int teamId)
         return StatusType::INVALID_INPUT;
     }
     if((!m_teams.find(teamId)) || !(m_teams.find(teamId)->m_data)->isEmptyTeam()){
-        std::cout << "coulnd remove team "<< teamId << std::endl;
         return StatusType::FAILURE;
     }
     try{
@@ -68,11 +67,6 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         currentTeam->insertPlayer(newPlayer);
         addIfValidTeam(currentTeam);
         insertPlayerToList(m_playersByScore.find(newPlayer));
-        std::cout << "players by id: " <<std::endl;
-        m_playersById.printD(m_playersById.getRoot(), 10);
-        std::cout << "players by id: " <<std::endl;
-        m_playersByScore.printD(m_playersByScore.getRoot(), 10);
-        m_playersListByScore.printList();
     }
     catch(std::bad_alloc&){
         return StatusType::ALLOCATION_ERROR;
@@ -100,8 +94,7 @@ StatusType world_cup_t::remove_player(int playerId)
         if (!isValidTeam(playerTeam) && m_validTeams.find(playerTeam->getTeamId()) != nullptr){
             m_validTeams.remove(playerTeam->getTeamId());
         }
-        m_playersByScore.printD(m_playersByScore.getRoot(), 10);
-        m_playersListByScore.printList();
+
         m_numPlayers--;
     }
     catch(std::bad_alloc&){
@@ -247,15 +240,11 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             team1->merge(team2);
             remove_team(teamId2);
             addIfValidTeam(team1);
-
-            // m_validTeams.remove(team2);
         }
         else if(teamId2==newTeamId){
             team2->merge(team1);
             remove_team(teamId1);
             addIfValidTeam(team2);
-            // m_teams.remove(team1);
-            // m_validTeams.remove(team1);
         }
         else{
             add_team(newTeamId, 0);
@@ -264,21 +253,13 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
             newTeam->merge(team2);
             remove_team(teamId1);
             remove_team(teamId2);
-            //m_teams.insert(newTeam);
             addIfValidTeam(newTeam);
-            // m_teams.remove(team1);
-            // m_validTeams.remove(team1);
-            // m_teams.remove(team2);
-            // m_validTeams.remove(team2);
         }
     
     }
     catch(std::bad_alloc&){
         return StatusType::ALLOCATION_ERROR;
     }
-
-    m_teams.printD(m_teams.getRoot(), 10);
-    m_validTeams.printD(m_teams.getRoot(), 10);
 
     return StatusType::SUCCESS;
 }
