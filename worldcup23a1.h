@@ -47,7 +47,7 @@ private:
      * insert a new node to the players deque
      * @param newNode to be inserted to the list
      */
-    void insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::BinNode* newNode);;
+    void insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::BinNode* newNode);
 
     /**
      * return true if team has at least 11 players and at least one goalkeeper
