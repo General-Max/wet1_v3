@@ -141,12 +141,14 @@ StatusType world_cup_t::play_match(int teamId1, int teamId2)
     if(teamId1<=0 || teamId2<=0 || teamId1==teamId2){
         return StatusType::INVALID_INPUT;
     }
+
+    if(m_teams.find(teamId1) == nullptr || m_teams.find(teamId2) == nullptr){
+        return StatusType::FAILURE;
+    }
+
     shared_ptr<Team> team1  = m_teams.find(teamId1)->m_data;
     shared_ptr<Team> team2 = m_teams.find(teamId2)->m_data;
 
-    if(team1==nullptr || team2==nullptr){
-        return StatusType::FAILURE;
-    }
     try{
         if(team1->getScore() > team2->getScore()){
             team1->updatePoints(WIN);
@@ -173,14 +175,14 @@ output_t<int> world_cup_t::get_num_played_games(int playerId)
     if(playerId<=0){
         return output_t<int>(StatusType::INVALID_INPUT);
     }
-    shared_ptr<Player> player = m_playersById.find(playerId)->m_data;
-    if(player==nullptr){
+    
+    if(m_playersById.find(playerId)==nullptr){
         return StatusType::FAILURE;
     }
-
     int played=0;
     try
     {
+        shared_ptr<Player> player = m_playersById.find(playerId)->m_data;
         played+= player->getGamesPlayed();
         int playedWithTeam=0;
         playedWithTeam= player->getTeamPtr()->getPlayedTogether();
@@ -199,13 +201,14 @@ output_t<int> world_cup_t::get_team_points(int teamId)
         return output_t<int>(StatusType::INVALID_INPUT);
     }
     
-    shared_ptr<Team> team = m_teams.find(teamId)->m_data;
-    if(team == nullptr){
+    if(m_teams.find(teamId) == nullptr){
         return StatusType::FAILURE;
     }
+
     int points=0;
     try
     {
+        shared_ptr<Team> team = m_teams.find(teamId)->m_data;
         points=team->getPoints();
     }
     catch(std::bad_alloc&)
@@ -221,17 +224,21 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
     if(newTeamId<=0 || teamId1<=0 || teamId2<=0 || teamId1==teamId2){
         return StatusType::INVALID_INPUT;
     }
+    
+    if(m_teams.find(teamId1)==nullptr || m_teams.find(teamId2)==nullptr){
+        return StatusType::FAILURE;
+    }
 
     shared_ptr<Team> team1 = m_teams.find(teamId1)->m_data;
     shared_ptr<Team> team2 = m_teams.find(teamId2)->m_data;
+    
     if(m_teams.find(newTeamId)!=nullptr){
         shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
     }
     else{
         shared_ptr<Team> newTeam = nullptr;
     }
-    if(team1==nullptr || team2==nullptr || ((m_teams.find(newTeamId)!=nullptr && newTeamId!=teamId1) && (
-            m_teams.find(newTeamId)!=nullptr && newTeamId!=teamId2))){
+    if(((m_teams.find(newTeamId)!=nullptr && newTeamId!=teamId1) && (m_teams.find(newTeamId)!=nullptr && newTeamId!=teamId2))){
         return StatusType::FAILURE;
     }
 
