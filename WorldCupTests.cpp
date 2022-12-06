@@ -2591,17 +2591,17 @@ TEST_CASE("unite_teams")
 
         delete obj;
     }
-//
-//    SECTION("unite_teams legal and not legal teams to the not legal")
-//    {
-//        world_cup_t *obj = new world_cup_t();
-//
-//        StatusType res = obj->add_team(1, 2);
-//        REQUIRE(res == StatusType::SUCCESS);
-//        res = obj->add_player(1001, 1, 1, 5, 2, false);
-//        REQUIRE(res == StatusType::SUCCESS);
-//        res = obj->add_player(1002, 1, 1, 3, 4, false);
-//        REQUIRE(res == StatusType::SUCCESS);
+
+    SECTION("unite_teams legal and not legal teams to the not legal")
+    {
+        world_cup_t *obj = new world_cup_t();
+
+        StatusType res = obj->add_team(1, 2);
+        REQUIRE(res == StatusType::SUCCESS);
+        res = obj->add_player(1001, 1, 1, 5, 2, false);
+        REQUIRE(res == StatusType::SUCCESS);
+        res = obj->add_player(1002, 1, 1, 3, 4, false);
+        REQUIRE(res == StatusType::SUCCESS);
 //        res = obj->add_player(1003, 1, 1, 1, 1, false);
 //        REQUIRE(res == StatusType::SUCCESS);
 //        res = obj->add_team(2, 2);
@@ -2630,6 +2630,8 @@ TEST_CASE("unite_teams")
 //        REQUIRE(res == StatusType::SUCCESS);
 //        res = obj->add_player(1017, 2, 1, 1, 1, false);
 //        REQUIRE(res == StatusType::SUCCESS);
+        delete obj;
+    }
 //        output_t<int> resn3 = obj->knockout_winner(1, 4);
 //        REQUIRE(resn3.status() == StatusType::SUCCESS);
 //        REQUIRE(resn3.ans() == 2);
