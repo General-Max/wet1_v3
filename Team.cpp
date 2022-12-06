@@ -157,6 +157,7 @@ void Team::merge(shared_ptr<Team> toMerge)
 
 void Team::unite(shared_ptr<Team> team1, shared_ptr<Team> team2)
 {
+
     uniteFillTree(this->m_teamPlayersByID, team1->m_teamPlayersByID, team2->m_teamPlayersByID, true);
     uniteFillTree(this->m_teamPlayersByScore, team1->m_teamPlayersByScore, team2->m_teamPlayersByScore, false);
     // set it to an empty team, its trees has been deleted in the fill function
