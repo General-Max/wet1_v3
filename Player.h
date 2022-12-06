@@ -5,6 +5,8 @@
 #include <memory>
 class Team;
 #include "TwoWayList.h"
+#include "SortByScore.h"
+
 using std::ostream;
 using std::shared_ptr;
 

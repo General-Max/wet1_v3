@@ -97,6 +97,7 @@ private:
      */
     void fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root);
 
+    static int abs(int num);
 
 public:
     // <DO-NOT-MODIFY> {

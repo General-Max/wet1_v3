@@ -142,7 +142,7 @@ StatusType world_cup_t::play_match(int teamId1, int teamId2)
         return StatusType::INVALID_INPUT;
     }
 
-    if(m_teams.find(teamId1) == nullptr || m_teams.find(teamId2) == nullptr){
+    if(m_validTeams.find(teamId1) == nullptr || m_validTeams.find(teamId2) == nullptr){
         return StatusType::FAILURE;
     }
 
@@ -427,29 +427,28 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId)
 
 int world_cup_t::closest(shared_ptr<Player> player, shared_ptr<Player> prevPlayer, shared_ptr<Player> nextPlayer)
 {
-    if(player->getGoals()-prevPlayer->getGoals() < player->getGoals()-nextPlayer->getGoals()){
+    if(abs(player->getGoals()-prevPlayer->getGoals()) < abs(player->getGoals()-nextPlayer->getGoals())){
         return prevPlayer->getPlayerId();
     }
-    else if(player->getGoals()-prevPlayer->getGoals() > player->getGoals()-nextPlayer->getGoals()){
+    else if(abs(player->getGoals()-prevPlayer->getGoals()) > abs(player->getGoals()-nextPlayer->getGoals())){
         return nextPlayer->getPlayerId();
     }
 
-    if(player->getCards()-prevPlayer->getCards() < player->getCards()-nextPlayer->getCards()){
-            return prevPlayer->getPlayerId();
+    if(abs(player->getCards()-prevPlayer->getCards()) < abs(player->getCards()-nextPlayer->getCards())){
+        return prevPlayer->getPlayerId();
     }
-    else if(player->getCards()-prevPlayer->getCards() > player->getCards()-nextPlayer->getCards()){
+    else if(abs(player->getCards()-prevPlayer->getCards()) > abs(player->getCards()-nextPlayer->getCards())){
         return nextPlayer->getPlayerId();
     }
-
         
-    if(player->getPlayerId()-prevPlayer->getPlayerId() < player->getPlayerId()-nextPlayer->getPlayerId()){
+    if(abs(player->getPlayerId()-prevPlayer->getPlayerId()) < abs(player->getPlayerId()-nextPlayer->getPlayerId())){
         return prevPlayer->getPlayerId();
     }
-    else if(player->getPlayerId()-prevPlayer->getPlayerId() > player->getPlayerId()-nextPlayer->getPlayerId()){
+    else if(abs(player->getPlayerId()-prevPlayer->getPlayerId()) > abs(player->getPlayerId()-nextPlayer->getPlayerId())){
         return nextPlayer->getPlayerId();
     }
 
-    if(prevPlayer->getPlayerId()>nextPlayer->getPlayerId()){
+    if(abs(prevPlayer->getPlayerId())>abs(nextPlayer->getPlayerId())){
         return prevPlayer->getPlayerId();
     }
     return nextPlayer->getPlayerId();
@@ -599,4 +598,11 @@ void world_cup_t::insertPlayerToList(AVLTree<shared_ptr<Player>, SortByScore>::B
     else{
         m_playersListByScore.insertAfter(newListNode, (newNode->m_right->m_data)->getDequePtr());
     }
+}
+
+int world_cup_t::abs(int num){
+    if(num<0){
+        return num*(-1);
+    }
+    return num;
 }

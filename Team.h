@@ -20,7 +20,7 @@ public:
     /**
      * Destructor of team, destroy the team's players trees
      */
-    ~Team();
+    ~Team() = default;
 
     /**
      * @return teh is of the team

@@ -6,6 +6,7 @@
 #define DATA_STRUCTRS_WET1_TwoWayList_H
 #include <iostream>
 #include "SortByScore.h"
+class PLayer;
 
 template<class T>
 class TwoWayList{
@@ -121,12 +122,15 @@ template <class T>
 void TwoWayList<T>::removeNode(TwoWayList<T>::ListNode* nodeToDelete)
 {
     if(nodeToDelete == nullptr){
-        std::cout<< "error in deleting node from a list" << std::endl;
+        return;
     }
     ListNode* prevNode = nodeToDelete->m_prev;
     ListNode* nextNode = nodeToDelete->m_next;
 
-    if(prevNode == nullptr){
+    if(prevNode == nullptr && nextNode == nullptr){
+        this->m_head = nullptr;
+    }
+    else if(prevNode == nullptr){
         this->m_head = nextNode;
         nextNode->m_prev = nullptr;
     }
@@ -138,7 +142,6 @@ void TwoWayList<T>::removeNode(TwoWayList<T>::ListNode* nodeToDelete)
         nextNode->m_prev = prevNode;
     }
 
-    std::cout << "delete list node" << nodeToDelete->m_nodeData;
     delete nodeToDelete;
 }
 

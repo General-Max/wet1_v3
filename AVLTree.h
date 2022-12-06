@@ -316,6 +316,7 @@ void AVLTree<T, Comparison>::emptyAux(AVLTree<T, Comparison>::BinNode* node) {
     if(node->m_right){
         emptyAux(node->m_right);
     }
+
     delete node;
 }
 

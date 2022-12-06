@@ -3,7 +3,7 @@ project(data_s_v3)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(data_s_v3 main.cpp
+add_executable(data_s_v3 WorldCupTests.cpp
         AVLTree.h
         Player.h
         Player.cpp
