@@ -620,7 +620,3 @@ int world_cup_t::abs(int num){
     }
     return num;
 }
-
-void world_cup_t::printValidTeams(){
-    m_validTeams.printD(m_validTeams.getRoot(), 10);
-}

@@ -101,7 +101,6 @@ private:
     static int abs(int num);
 
 public:
-    void printValidTeams();
     // <DO-NOT-MODIFY> {
 
     world_cup_t();
