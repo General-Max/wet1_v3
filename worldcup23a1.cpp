@@ -75,6 +75,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     return StatusType::SUCCESS;
 }
 
+
 StatusType world_cup_t::remove_player(int playerId)
 {
     // TODO: Your code goes here
@@ -478,27 +479,32 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
         delete[] pairs;
         return StatusType::FAILURE;
     }
-    
+
+    int loserScore=0;
     while(realSize>1){
         int pos =0;
         for(int i=0;i<realSize;i+=2){
             if(i+1<realSize){
                 if(pairs[i].m_score<pairs[i+1].m_score){
+                    loserScore = pairs[i].m_score;
                     pairs[pos] = pairs[i+1];
-                    pairs[pos].m_score += (pairs[i].m_score+WIN);
+                    pairs[pos].m_score += (loserScore+WIN);
                 }
                 else if(pairs[i].m_score>pairs[i+1].m_score){
+                    loserScore = pairs[i+1].m_score;
                     pairs[pos] = pairs[i];
-                    pairs[pos].m_score += (pairs[i+1].m_score+WIN);
+                    pairs[pos].m_score += (loserScore+WIN);
                 }
                 else{
                     if(pairs[i].m_teamId<pairs[i+1].m_teamId){
+                        loserScore = pairs[i].m_score;
                         pairs[pos] = pairs[i+1];
-                        pairs[pos].m_score += (pairs[i].m_score+WIN);
+                        pairs[pos].m_score += (loserScore+WIN);
                     }
                     else{
+                        loserScore = pairs[i+1].m_score;
                         pairs[pos] = pairs[i];
-                        pairs[pos].m_score += (pairs[i+1].m_score+WIN);
+                        pairs[pos].m_score += (loserScore+WIN);
                     }
                 }
                 pos++;
@@ -541,13 +547,14 @@ world_cup_t::Pair* world_cup_t::fill(int min, int max)
 }
 
 
-void world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root)
+int world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root)
 {
     if (root == nullptr)
-        return;
-    
+        return pos;
+
+
     if (root->m_data->getTeamId() > min){
-        fill_aux(pairs,pos, min, max, root->m_left);
+        pos = fill_aux(pairs,pos, min, max, root->m_left);
     }
     
     if (root->m_data->getTeamId()>=min && root->m_data->getTeamId()<=max){
@@ -560,7 +567,7 @@ void world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<share
     }
      
     /* recursively call the right subtree */
-   fill_aux(pairs, pos, min, max, root->m_right);
+   return fill_aux(pairs, pos, min, max, root->m_right);
 }
 
 //can be shared pyr or weak ptr
@@ -612,4 +619,8 @@ int world_cup_t::abs(int num){
         return num*(-1);
     }
     return num;
+}
+
+void world_cup_t::printValidTeams(){
+    m_validTeams.printD(m_validTeams.getRoot(), 10);
 }
