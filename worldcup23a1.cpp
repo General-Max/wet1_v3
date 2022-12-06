@@ -256,8 +256,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
         else{
             add_team(newTeamId, 0);
             shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
-            newTeam->merge(team1);
-            newTeam->merge(team2);
+            newTeam->unite(team1, team2);
             remove_team(teamId1);
             remove_team(teamId2);
             addIfValidTeam(newTeam);
@@ -471,6 +470,10 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
         realSize++;
     }
 
+    for(int i= 0; i< realSize; i++){
+        std::cout << pairs[i].m_teamId << std::endl;
+        std::cout << pairs[i].m_score << std::endl;
+    }
     if(realSize == 0){
         delete[] pairs;
         return StatusType::FAILURE;
@@ -514,7 +517,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     }
 
     int winnerId = pairs[0].m_teamId;
-    delete[] pairs;
+  //  delete[] pairs;
     return winnerId;
 }
 
@@ -528,12 +531,15 @@ world_cup_t::Pair* world_cup_t::fill(int min, int max)
         struct Pair pair;
         pair.m_score = -1;
         pair.m_teamId = -1;
-        pairs[i] = pair;;
+        pairs[i] = pair;
     }
 
+    std::cout << "here\n";
+    m_validTeams.printD(m_validTeams.getRoot(), 10);
     fill_aux(pairs, 0, min, max, m_validTeams.getRoot());
     return pairs;
 }
+
 
 void world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root)
 {
@@ -550,10 +556,11 @@ void world_cup_t::fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<share
         pair.m_score = score;
         pair.m_teamId = root->m_data->getTeamId();
         pairs[pos] = pair;
+        pos++;
     }
      
     /* recursively call the right subtree */
-   fill_aux(pairs, ++pos, min, max, root->m_right);
+   fill_aux(pairs, pos, min, max, root->m_right);
 }
 
 //can be shared pyr or weak ptr
