@@ -64,6 +64,7 @@ private:
      */
     void addIfValidTeam(shared_ptr<Team> team);
 
+
     /**
      * remove a node from the valid tree teams in case the team is no longer a valid node
      * @param team
@@ -95,7 +96,7 @@ private:
      * @param max
      * @param root
      */
-    void fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root);
+    int fill_aux(Pair* pairs, int pos, int min, int max, AVLTree<shared_ptr<Team>, SortTeamById>::BinNode* root);
 
     static int abs(int num);
 

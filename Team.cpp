@@ -88,26 +88,19 @@ AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
     return this->m_teamPlayersByID;
 }
 
-
 template<class T>
-shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
-                        int sizeTarget, int sizeMerged){
-    shared_ptr<Player>* targetArray = targetTree.inOrderArray();
-    shared_ptr<Player>* mergedArray = mergedTree.inOrderArray();
-
-    int size = sizeTarget+sizeMerged;
-
-    shared_ptr<Player>* newTeam = new shared_ptr<Player>[size];
+shared_ptr<Player> * Team::mergeSortedArrays(shared_ptr<Player>* targetArray, shared_ptr<Player>* mergedArray,
+                                             shared_ptr<Player>* newArray, int sizeTarget, int sizeMerged){
     int index1=0;
     int index2=0;
     int i=0;
     while(index1<sizeTarget && index2<sizeMerged){
         if(T::lessThan(targetArray[index1], mergedArray[index2])){
-            newTeam[i] = targetArray[index1];
+            newArray[i] = targetArray[index1];
             index1++;
         }
         else{
-            newTeam[i] = mergedArray[index2];
+            newArray[i] = mergedArray[index2];
             index2++;
         }
         i++;
@@ -115,14 +108,14 @@ shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &tar
 
     for(int j = index1; j<sizeTarget;j++)
     {
-        newTeam[i]=targetArray[index1];
+        newArray[i]=targetArray[index1];
         index1++;
         i++;
     }
 
     for(int j = index2; j<sizeMerged;j++)
     {
-        newTeam[i]=mergedArray[index2];
+        newArray[i]=mergedArray[index2];
         index2++;
         i++;
     }
@@ -137,35 +130,93 @@ shared_ptr<Player> * Team::mergeSortedArrays(AVLTree<shared_ptr<Player>, T> &tar
 
     delete[] targetArray;
     delete[] mergedArray;
-    return newTeam;
+    return newArray;
+}
+
+template<class T>
+shared_ptr<Player> * Team::mergeSortedArraysByTrees(AVLTree<shared_ptr<Player>, T> &targetTree, AVLTree<shared_ptr<Player>, T> &mergedTree,
+                        int sizeTarget, int sizeMerged){
+    shared_ptr<Player>* targetArray = targetTree.inOrderArray();
+    shared_ptr<Player>* mergedArray = mergedTree.inOrderArray();
+
+    int size = sizeTarget+sizeMerged;
+
+    shared_ptr<Player>* newTeamArray = new shared_ptr<Player>[size];
+
+    return mergeSortedArrays<T>(targetArray, mergedArray, newTeamArray, sizeTarget, sizeMerged);
+
 }
 
 void Team::merge(shared_ptr<Team> toMerge)
 {
-    fillNewTree(toMerge, this->m_teamPlayersByID, toMerge->m_teamPlayersByID);
-    fillNewTree(toMerge, this->m_teamPlayersByScore, toMerge->m_teamPlayersByScore);
+    fillNewTree(toMerge, this->m_teamPlayersByID, toMerge->m_teamPlayersByID, true);
+    fillNewTree(toMerge, this->m_teamPlayersByScore, toMerge->m_teamPlayersByScore, false);
+    toMerge->m_totalPlayers = 0; // set it to an empty team, its trees has been deleted in the fill function
     this->updatePoints(toMerge->getPoints());
 }
 
+void Team::unite(shared_ptr<Team> team1, shared_ptr<Team> team2)
+{
+
+    uniteFillTree(this->m_teamPlayersByID, team1->m_teamPlayersByID, team2->m_teamPlayersByID, true);
+    uniteFillTree(this->m_teamPlayersByScore, team1->m_teamPlayersByScore, team2->m_teamPlayersByScore, false);
+    // set it to an empty team, its trees has been deleted in the fill function
+    team1->m_totalPlayers = 0;
+    team2->m_totalPlayers = 0;
+    this->updatePoints(team1->getPoints() + team2->getPoints());
+}
+
+
+template <class T>
+void Team::uniteFillTree(AVLTree<shared_ptr<Player>, T>& newTeamTree,
+                         AVLTree<shared_ptr<Player>, T>& team1Tree, AVLTree<shared_ptr<Player>, T>& team2Tree, bool toAddPlayers){
+    int sizeTeam1 = team1Tree.getSize();
+    int sizeTeam2 = team2Tree.getSize();
+    int size = sizeTeam1 + sizeTeam2;
+
+    shared_ptr<Player>* tempArray = mergeSortedArraysByTrees<T>(newTeamTree, team1Tree, newTeamTree.getSize(), sizeTeam1);
+    shared_ptr<Player>* newArray = new shared_ptr<Player>[size];
+    newArray = mergeSortedArrays<T>( tempArray, team2Tree.inOrderArray(), newArray, sizeTeam1, sizeTeam2);
+
+    team1Tree.emptyTree();
+    team2Tree.emptyTree();
+
+    for(int i=0;i<size;i++){
+        if(toAddPlayers){
+            if(newArray[i]->getGoalKeeper()){
+                this->m_goalkeepers++;
+            }
+            m_totalCards+=newArray[i]->getCards();
+            m_totalGoals+=newArray[i]->getGoals();
+            m_totalPlayers++;
+        }
+        newTeamTree.insert(newArray[i]);
+    }
+    delete[] newArray;
+}
+
+
 template<class T>
-void Team::fillNewTree(shared_ptr<Team> toMerge, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>, T>& mergedTree) {
+void Team::fillNewTree(shared_ptr<Team> toMerge, AVLTree<shared_ptr<Player>, T>& targetTree, AVLTree<shared_ptr<Player>,
+        T>& mergedTree, bool toAddPlayers) {
     int sizeTarget = targetTree.getSize();
     int sizeMerged = mergedTree.getSize();
     int size = sizeTarget+sizeMerged;
 
-    shared_ptr<Player>* newArray = mergeSortedArrays(targetTree, mergedTree, sizeTarget, sizeMerged);
+    shared_ptr<Player>* newArray = mergeSortedArraysByTrees(targetTree, mergedTree, sizeTarget, sizeMerged);
 
     targetTree.emptyTree();
     mergedTree.emptyTree();
 
     for(int i=0;i<size;i++){
-        if(newArray[i]->getGoalKeeper()){
-            this->m_goalkeepers++;
+        if(toAddPlayers){
+            if(newArray[i]->getGoalKeeper()){
+                this->m_goalkeepers++;
+            }
+            m_totalCards+=newArray[i]->getCards();
+            m_totalGoals+=newArray[i]->getGoals();
+            m_totalPlayers++;
         }
-        m_totalCards+=newArray[i]->getCards();
-        m_totalGoals+=newArray[i]->getGoals();
-        m_totalPlayers++;
-
         targetTree.insert(newArray[i]);
     }
     delete[] newArray;

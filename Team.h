@@ -109,6 +109,29 @@ public:
 
 
     /**
+     * gets all player from 2 teams and puts it in the current
+     * @param team1
+     * @param team2
+     */
+    void unite(shared_ptr<Team> team1, shared_ptr<Team> team2);
+
+    template <class T>
+    static shared_ptr<Player> * mergeSortedArrays(shared_ptr<Player>* targetArray, shared_ptr<Player>* mergedArray,
+                                                  shared_ptr<Player>* newArray, int sizeTarget, int sizeMerged);
+
+    /**
+     * helper function for unite that relocates the players from two teams to the current
+     * @tparam T comparison type
+     * @param newTeamTree the tree of the team that all the players will be added to
+     * @param team1Tree
+     * @param team2Tree
+     * @param toAddPlayers true if it is the first time this function called and we want the team counter and status
+     * to change accordingly
+     */
+    template<class T>
+    void uniteFillTree(AVLTree<shared_ptr<Player>, T>& newTeamTree,
+                             AVLTree<shared_ptr<Player>, T>& team1Tree, AVLTree<shared_ptr<Player>, T>& team2Tree, bool toAddPlayers);
+    /**
      * Helper function of merge that relocates the players from one team to the current
      * @tparam T
      * @param merged
@@ -116,10 +139,11 @@ public:
      * @param mergedTree
      */
     template<class T>
-    void fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player> , T>& targetTree,  AVLTree<shared_ptr<Player> , T>& mergedTree);
+    void fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player> , T>& targetTree,  AVLTree<shared_ptr<Player> ,
+            T>& mergedTree, bool toAddPlayers);
 
     template<class T>
-    static shared_ptr<Player> * mergeSortedArrays(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
+    static shared_ptr<Player> * mergeSortedArraysByTrees(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
                                       int sizeTarget, int sizeMerged);
 
     /**
@@ -145,7 +169,6 @@ public:
      * @return
      */
     friend ostream& operator<<(ostream& os, const Team& team);
-
 
 private:
     int m_teamId;
