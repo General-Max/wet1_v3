@@ -170,7 +170,6 @@ public:
      */
     friend ostream& operator<<(ostream& os, const Team& team);
 
-
 private:
     int m_teamId;
     int m_points;
