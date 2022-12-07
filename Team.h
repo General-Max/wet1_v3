@@ -105,7 +105,7 @@ public:
      * gets all players from one team and puts in the current
      * @param toMerge
      */
-    void merge(shared_ptr<Team> toMerge);
+    //void mergeTeams(shared_ptr<Team> toMerge);
 
 
     /**
@@ -113,11 +113,11 @@ public:
      * @param team1
      * @param team2
      */
-    void unite(shared_ptr<Team> team1, shared_ptr<Team> team2);
+    //void unite(shared_ptr<Team> team1, shared_ptr<Team> team2);
 
-    template <class T>
-    static shared_ptr<Player> * mergeSortedArrays(shared_ptr<Player>* targetArray, shared_ptr<Player>* mergedArray,
-                                                  shared_ptr<Player>* newArray, int sizeTarget, int sizeMerged);
+//    template <class T>
+//    static shared_ptr<Player> * mergeSortedArrays(shared_ptr<Player>* targetArray, shared_ptr<Player>* mergedArray,
+//                                                  shared_ptr<Player>* newArray, int sizeTarget, int sizeMerged);
 
     /**
      * helper function for unite that relocates the players from two teams to the current
@@ -128,9 +128,9 @@ public:
      * @param toAddPlayers true if it is the first time this function called and we want the team counter and status
      * to change accordingly
      */
-    template<class T>
-    void uniteFillTree(AVLTree<shared_ptr<Player>, T>& newTeamTree,
-                             AVLTree<shared_ptr<Player>, T>& team1Tree, AVLTree<shared_ptr<Player>, T>& team2Tree, bool toAddPlayers);
+//    template<class T>
+//    void uniteFillTree(AVLTree<shared_ptr<Player>, T>& newTeamTree,
+//                             AVLTree<shared_ptr<Player>, T>& team1Tree, AVLTree<shared_ptr<Player>, T>& team2Tree, bool toAddPlayers);
     /**
      * Helper function of merge that relocates the players from one team to the current
      * @tparam T
@@ -138,13 +138,13 @@ public:
      * @param targetTree
      * @param mergedTree
      */
-    template<class T>
-    void fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player> , T>& targetTree,  AVLTree<shared_ptr<Player> ,
-            T>& mergedTree, bool toAddPlayers);
+//    template<class T>
+//    void fillNewTree(shared_ptr<Team> merged, AVLTree<shared_ptr<Player> , T>& targetTree,  AVLTree<shared_ptr<Player> ,
+//            T>& mergedTree, bool toAddPlayers);
 
-    template<class T>
-    static shared_ptr<Player> * mergeSortedArraysByTrees(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
-                                      int sizeTarget, int sizeMerged);
+//    template<class T>
+//    static shared_ptr<Player> * mergeSortedArraysByTrees(AVLTree<shared_ptr<Player> , T>& targetTree, AVLTree<shared_ptr<Player> , T>& mergedTree,
+//                                      int sizeTarget, int sizeMerged);
 
     /**
      * @return the id of the player with the best score
@@ -169,6 +169,25 @@ public:
      * @return
      */
     friend ostream& operator<<(ostream& os, const Team& team);
+
+
+    //void storeInorder(AVLTree<shared_ptr<Team>, SortById>::BinNode* root, shared_ptr<Player>* inOrder, int *index);
+
+    template<class T>
+    typename AVLTree<shared_ptr<Player>, T>::BinNode* sortedArrayToAVL(shared_ptr<Player>* arr, int start, int end);
+
+    template<class T>
+    void storeInOrder(typename AVLTree<shared_ptr<Player>, T>::BinNode* root, shared_ptr<Player>* arr, int *index, int length);
+
+    template<class T>
+    shared_ptr<Player>* mergeSortedArrays(shared_ptr<Player>* first, shared_ptr<Player>* second, int size1, int size2);
+
+    template<class T>
+    typename AVLTree<shared_ptr<Player>, T>::BinNode* mergeTrees(typename AVLTree<shared_ptr<Player>, T>::BinNode* root1, int size1,
+                                                                       typename AVLTree<shared_ptr<Player>, T>::BinNode* root2, int size2);
+
+    void mergeTeams(shared_ptr<Team> toMerge, int size);
+
 
 private:
     int m_teamId;

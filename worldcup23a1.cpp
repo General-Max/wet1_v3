@@ -245,19 +245,21 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId)
 
     try{
         if(teamId1==newTeamId){
-            team1->merge(team2);
+            team1->mergeTeams(team2, team2->getTotalPlayers());
             remove_team(teamId2);
             addIfValidTeam(team1);
         }
         else if(teamId2==newTeamId){
-            team2->merge(team1);
+            team2->mergeTeams(team1, team1->getTotalPlayers());
             remove_team(teamId1);
             addIfValidTeam(team2);
         }
         else{
             add_team(newTeamId, 0);
             shared_ptr<Team> newTeam = m_teams.find(newTeamId)->m_data;
-            newTeam->unite(team1, team2);
+            newTeam->mergeTeams(team1, team1->getTotalPlayers());
+            newTeam->mergeTeams(team2, team2->getTotalPlayers());
+
             remove_team(teamId1);
             remove_team(teamId2);
             addIfValidTeam(newTeam);
@@ -470,11 +472,12 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     while(pairs[realSize].m_teamId>0){
         realSize++;
     }
-
+/*
     for(int i= 0; i< realSize; i++){
         std::cout << pairs[i].m_teamId << std::endl;
         std::cout << pairs[i].m_score << std::endl;
     }
+    */
     if(realSize == 0){
         delete[] pairs;
         return StatusType::FAILURE;
@@ -523,7 +526,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId)
     }
 
     int winnerId = pairs[0].m_teamId;
-  //  delete[] pairs;
+    delete[] pairs;
     return winnerId;
 }
 
@@ -540,8 +543,8 @@ world_cup_t::Pair* world_cup_t::fill(int min, int max)
         pairs[i] = pair;
     }
 
-    std::cout << "here\n";
-    m_validTeams.printD(m_validTeams.getRoot(), 10);
+    //std::cout << "here\n";
+    //m_validTeams.printD(m_validTeams.getRoot(), 10);
     fill_aux(pairs, 0, min, max, m_validTeams.getRoot());
     return pairs;
 }

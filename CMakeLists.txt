@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(data_s_v3)
+project(wet1_v3)
 
 set(CMAKE_CXX_STANDARD 14)
 

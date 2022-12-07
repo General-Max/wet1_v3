@@ -111,6 +111,16 @@ public:
      */
     int auxInOrder(T* array, BinNode* node, int size, int position);
 
+    /**
+      * creates a new node with the given data
+      * @param data
+      * @return the new noed
+      */
+    static BinNode *initNode(T data);
+
+    void setRoot(AVLTree<T, Comparison>::BinNode* newRoot);
+
+
 private:
     //Tree fields
     BinNode *m_root;
@@ -119,12 +129,6 @@ private:
     int m_size;
 
      //Node Functions
-     /**
-      * creates a new node with the given data
-      * @param data
-      * @return the new noed
-      */
-     BinNode *initNode(T data);
 
      /**
       * the function does the needed rotations in order to maintain the tree as a AVL tree
@@ -208,6 +212,12 @@ private:
 
 
 // Functions implementation
+
+template<class T,class Comparison>
+void AVLTree<T, Comparison>::setRoot(AVLTree<T, Comparison>::BinNode* newRoot)
+{
+    this->m_root = newRoot;
+}
 
 template<class T,class Comparison>
 T* AVLTree<T, Comparison>::inOrderArray()
