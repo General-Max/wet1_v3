@@ -91,8 +91,10 @@ AVLTree<shared_ptr<Player>, SortById> Team::getIdTree() const
 void Team::mergeTeams(shared_ptr<Team> toMerge, int size)
 {
     int sizeTree = this->getTotalPlayers();
-    this->m_teamPlayersByID.setRoot(mergeTrees<SortById>(this->m_teamPlayersByID.getRoot(), sizeTree, toMerge->m_teamPlayersByID.getRoot(), size));
-    this->m_teamPlayersByScore.setRoot( mergeTrees<SortByScore>(this->m_teamPlayersByScore.getRoot(), sizeTree, toMerge->m_teamPlayersByScore.getRoot(), size));
+    AVLTree<shared_ptr<Player>, SortById>::BinNode* temp1 = mergeTrees<SortById>(this->m_teamPlayersByID, sizeTree, toMerge->m_teamPlayersByID, size);
+    this->m_teamPlayersByID.setRoot(temp1);
+    AVLTree<shared_ptr<Player>, SortByScore>::BinNode* temp2 = mergeTrees<SortByScore>(this->m_teamPlayersByScore, sizeTree, toMerge->m_teamPlayersByScore, size);
+    this->m_teamPlayersByScore.setRoot( temp2);
 
     shared_ptr<Player>* allPlayers = new shared_ptr<Player>[sizeTree+size];
     int i=0;
@@ -106,24 +108,22 @@ void Team::mergeTeams(shared_ptr<Team> toMerge, int size)
         m_totalPlayers++;
     }
     delete[] allPlayers;
+    delete temp1;
+    delete temp2;
 }
 
 template<class T>
-typename AVLTree<shared_ptr<Player>, T>::BinNode* Team::mergeTrees(typename AVLTree<shared_ptr<Player>, T>::BinNode* root1, int size1,
-                                                                   typename AVLTree<shared_ptr<Player>, T>::BinNode* root2, int size2)
+typename AVLTree<shared_ptr<Player>, T>::BinNode* Team::mergeTrees( AVLTree<shared_ptr<Player>, T> root1, int size1,
+                                                                    AVLTree<shared_ptr<Player>, T> root2, int size2)
 {
-    shared_ptr<Player>* first = new shared_ptr<Player>[size1];
-    int i=0;
-    storeInOrder<T>(root1, first, &i, size1);
+    shared_ptr<Player>* first = root1.inOrderArray();
 
-    shared_ptr<Player>* second = new shared_ptr<Player>[size2];
-    int j=0;
-    storeInOrder<T>(root2, first, &j, size2);
+    shared_ptr<Player>* second = root2.inOrderArray();
 
     shared_ptr<Player>* merged = mergeSortedArrays<T>(first, second, size1, size2);
 
-   delete[] first;
-   delete[] second;
+    delete[] first;
+    delete[] second;
 
     return sortedArrayToAVL<T>(merged, 0, size1+size2-1);
 
@@ -209,8 +209,10 @@ void Team::storeInOrder(typename AVLTree<shared_ptr<Player>, T>::BinNode* root, 
         return;
     }
     storeInOrder<T>(root->m_left, arr, index, length);
-
+    std::cout<<"here"<<std::endl;
+    std::cout<< (*index) <<std::endl;
     arr[*index] = root->m_data;
+    std::cout<<"but not here"<<std::endl;
     (*index)++;
 
     storeInOrder<T>(root->m_right, arr, index, length);

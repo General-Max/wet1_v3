@@ -183,8 +183,8 @@ public:
     shared_ptr<Player>* mergeSortedArrays(shared_ptr<Player>* first, shared_ptr<Player>* second, int size1, int size2);
 
     template<class T>
-    typename AVLTree<shared_ptr<Player>, T>::BinNode* mergeTrees(typename AVLTree<shared_ptr<Player>, T>::BinNode* root1, int size1,
-                                                                       typename AVLTree<shared_ptr<Player>, T>::BinNode* root2, int size2);
+    typename AVLTree<shared_ptr<Player>, T>::BinNode* mergeTrees(AVLTree<shared_ptr<Player>, T> root1, int size1,
+                                                                        AVLTree<shared_ptr<Player>, T> root2, int size2);
 
     void mergeTeams(shared_ptr<Team> toMerge, int size);
 
